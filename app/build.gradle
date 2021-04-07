@@ -58,8 +58,19 @@ dependencies {
     // For the new preferences fragment
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
+    // For Retrofit and its serializers.
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+
+
+    // Moshi
+    implementation "com.squareup.moshi:moshi:$version_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+
+    // Retrofit with Moshi Converter
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
+
     // For testing
-    testImplementation 'junit:junit:4.+'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

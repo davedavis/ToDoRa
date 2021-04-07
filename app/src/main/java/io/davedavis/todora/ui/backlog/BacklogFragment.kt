@@ -15,17 +15,17 @@ class BacklogFragment : Fragment() {
 
     private lateinit var backlogViewModel: BacklogViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        backlogViewModel =
-            ViewModelProvider(this).get(BacklogViewModel::class.java)
+    override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+
+        backlogViewModel = ViewModelProvider(this).get(BacklogViewModel::class.java)
+
         val root = inflater.inflate(R.layout.fragment_backlog, container, false)
+
         val textView: TextView = root.findViewById(R.id.text_backlog)
-        backlogViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+
+        backlogViewModel.properties.observe(viewLifecycleOwner, Observer {
+            textView.text = it.toString()
         })
         return root
     }

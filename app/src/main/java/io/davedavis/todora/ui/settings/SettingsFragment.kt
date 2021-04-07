@@ -11,7 +11,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings, rootKey)
 
-
+        // ToDo: Finish validation
         // Let's do some validation. First, let's grab the fields.
         val userNameField = preferenceScreen.findPreference<EditTextPreference>("user_name")
         val userEmailField = preferenceScreen.findPreference<EditTextPreference>("user_email")

@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel
 class DebugViewModel (prefs: SharedPreferences) : ViewModel() {
 
     init {
-        Log.i("Dave", "Received Preferences object from Factory ${prefs.toString()}")
+        Log.i("Dave", "Received Preferences object from Factory $prefs")
     }
 
 
