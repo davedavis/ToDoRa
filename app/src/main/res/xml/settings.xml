@@ -2,13 +2,65 @@
 <PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <SwitchPreferenceCompat
-        app:key="notifications"
-        app:title="Enable message notifications"/>
+    <PreferenceCategory
+        app:title="@string/project_settings"
+        app:iconSpaceReserved="false">
 
-    <Preference
-        app:key="feedback"
-        app:title="Send feedback"
-        app:summary="Report technical issues or suggest new features"/>
+
+        <EditTextPreference
+            app:key="user_name"
+            app:title="@string/user_name"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false"
+            />
+
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            app:key="user_email"
+            app:title="@string/user_email_address"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="user_project_url"
+            app:title="@string/user_project_url"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false"
+            />
+
+        <EditTextPreference
+            app:key="user_project_id"
+            app:title="@string/user_project_id"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false"
+            />
+
+        <EditTextPreference
+            app:key="user_api_key"
+            app:title="@string/user_api_key"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false"
+            />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/app_settings"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="sync"
+            app:title="@string/live_update"
+            app:iconSpaceReserved="false"/>
+
+        <SwitchPreferenceCompat
+            app:dependency="sync"
+            app:key="attachment"
+            app:iconSpaceReserved="false"
+            app:summaryOff="@string/backlog_manual"
+            app:summaryOn="@string/backlog_auto"
+            app:title="@string/backlog_sync" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -16,4 +16,15 @@
     <string name="done">Done</string>
     <string name="create">Create</string>
     <string name="debug">Debug</string>
+    <string name="project_settings">Project Settings</string>
+    <string name="user_name">Name</string>
+    <string name="user_email_address">Email Address</string>
+    <string name="user_project_url">Jira Subdomain URL</string>
+    <string name="user_project_id">Jira Project ID</string>
+    <string name="app_settings">App Settings</string>
+    <string name="live_update">Live Update</string>
+    <string name="backlog_manual">Backlog must be manually refreshed</string>
+    <string name="backlog_auto">Backlog will be synced in real time</string>
+    <string name="backlog_sync">Backlog Sync</string>
+    <string name="user_api_key">Jira API Key</string>
 </resources>
