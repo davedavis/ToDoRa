@@ -24,4 +24,25 @@
         android:label="@string/create"
         tools:layout="@layout/fragment_create" />
 
+    <fragment
+        android:id="@+id/nav_debug"
+        android:name="io.davedavis.todora.ui.debug.DebugFragment"
+        android:label="@string/debug"
+        tools:layout="@layout/fragment_debug" >
+        <action
+            android:id="@+id/action_nav_debug_to_settingsFragment"
+            app:destination="@id/settings" />
+    </fragment>
+
+    <!--Settings fragment-->
+    <fragment
+        android:id="@+id/settings"
+        android:name="io.davedavis.todora.ui.settings.SettingsFragment"
+        android:label="settings" />
+
+    <!--Global action-->
+    <action
+        android:id="@+id/open_settings_fragment"
+        app:destination="@id/settings" />
+
 </navigation>
