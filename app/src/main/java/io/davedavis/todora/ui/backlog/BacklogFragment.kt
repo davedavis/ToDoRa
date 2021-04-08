@@ -24,8 +24,10 @@ class BacklogFragment : Fragment() {
 
         val textView: TextView = root.findViewById(R.id.text_backlog)
 
-        backlogViewModel.properties.observe(viewLifecycleOwner, Observer {
-            textView.text = it.toString()
+        backlogViewModel.issues.observe(viewLifecycleOwner, Observer {
+            for (issue in it.issues)
+                textView.append(issue.fields.summary + issue.fields.description+ issue.fields.priority.name
+                        + issue.fields.status.name + System.lineSeparator())
         })
         return root
     }

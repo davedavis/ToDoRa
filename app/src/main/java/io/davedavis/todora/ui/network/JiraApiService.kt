@@ -20,6 +20,7 @@ enum class JiraApiFilter(val value: String) {
     SHOW_ALL("all") }
 
 private const val BASE_URL = "https://davedavis.atlassian.net/rest/api/2/"
+//private const val BASE_URL = "http://192.168.1.144/"
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
@@ -33,7 +34,8 @@ private val retrofit = Retrofit.Builder()
 interface JiraApiService {
     @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
     @GET("search?jql=project=\"TODORA\"")
-    suspend fun getIssues(@Query("filter") type: String): List<JiraIssue>
+//    @GET("jira")
+    suspend fun getIssues(@Query("filter") type: String): JiraIssueResponse
 
 }
 
