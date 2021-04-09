@@ -1,4 +1,4 @@
-package io.davedavis.todora.ui.network
+package io.davedavis.todora.network
 
 import com.squareup.moshi.Json
 
@@ -8,6 +8,7 @@ data class JiraIssueResponse(
         val startAt: Int,
         val maxResults: Int,
         val total: Int,
+        // Not declaring this as a field as we want an object with an iterator for the RecyclerView.
         val issues: List<JiraIssue>
 )
 

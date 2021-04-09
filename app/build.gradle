@@ -69,8 +69,15 @@ dependencies {
     // Retrofit with Moshi Converter
     implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
 
+    // Retrofit logging
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+
     // For testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // Timber logging
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
 }
