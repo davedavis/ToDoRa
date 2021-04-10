@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import io.davedavis.todora.R
@@ -43,9 +42,16 @@ class HomeFragment : Fragment() {
 
 
         // Set up livedata observers.
-        viewModel.issues.observe(viewLifecycleOwner, Observer {
-            for (issue in it.issues)
-                textView.append(issue.fields.summary + issue.fields.description+ issue.fields.priority.name
+//        viewModel.issues.observe(viewLifecycleOwner, Observer {
+//            for (issue in it.issues)
+//                textView.append(issue.fields.summary + issue.fields.description + issue.fields.priority.name
+//                        + issue.fields.status.name + System.lineSeparator())
+//        })
+
+
+        viewModel.issues.observe(viewLifecycleOwner, {
+            for (issue in it)
+                textView.append(issue.fields.summary + issue.fields.description + issue.fields.priority.name
                         + issue.fields.status.name + System.lineSeparator())
         })
 

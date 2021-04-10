@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.davedavis.todora.network.JiraApi
-import io.davedavis.todora.network.JiraApiFilter
-import io.davedavis.todora.network.JiraIssue
-import io.davedavis.todora.network.JiraIssueResponse
+import io.davedavis.todora.network.*
 import kotlinx.coroutines.launch
 
 enum class JiraApiStatus { LOADING, ERROR, DONE }
@@ -21,8 +18,13 @@ class BacklogViewModel : ViewModel() {
         get() = _status
 
     // Actual Issues received from API LiveData
-    private val _issues = MutableLiveData<JiraIssueResponse>()
-    val issues: LiveData<JiraIssueResponse>
+    private val _jiraApiResponse = MutableLiveData<JiraIssueResponse>()
+    val jiraApiResponse: LiveData<JiraIssueResponse>
+        get() = _jiraApiResponse
+
+    // Actual Issues received from API LiveData
+    private val _issues = MutableLiveData<List<JiraIssue>>()
+    val issues: MutableLiveData<List<JiraIssue>>
         get() = _issues
 
     // Navigation LiveData
@@ -30,9 +32,9 @@ class BacklogViewModel : ViewModel() {
     val navigateToSelectedIssue: LiveData<JiraIssueResponse>
         get() = _navigateToSelectedIssue
 
-    // Immediate init call to the APU
+    // Immediate init call to the API
     init {
-        getJiraIssues(JiraApiFilter.SHOW_ALL)
+        getJiraIssues(JiraApiFilter.SHOW_BACKLOG)
     }
 
 
@@ -40,7 +42,10 @@ class BacklogViewModel : ViewModel() {
         viewModelScope.launch {
             _status.value = JiraApiStatus.LOADING
             try {
-                _issues.value = JiraApi.retrofitService.getIssues(filter.value)
+                _jiraApiResponse.value = JiraApi.retrofitService.getIssues(Auth.getAuthHeaders(), filter.value)
+                _issues.value = _jiraApiResponse.value!!.issues
+
+                Log.i(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", _jiraApiResponse.value.toString())
                 Log.i(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", _issues.value.toString())
                 _status.value = JiraApiStatus.DONE
             } catch (e: Exception) {

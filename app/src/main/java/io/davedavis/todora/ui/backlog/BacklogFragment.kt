@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import io.davedavis.todora.R
 
@@ -24,11 +23,21 @@ class BacklogFragment : Fragment() {
 
         val textView: TextView = root.findViewById(R.id.text_backlog)
 
-        backlogViewModel.issues.observe(viewLifecycleOwner, Observer {
-            for (issue in it.issues)
-                textView.append(issue.fields.summary + issue.fields.description+ issue.fields.priority.name
+//        backlogViewModel.jiraApiResponse.observe(viewLifecycleOwner, {
+//            for (issue in it.issues)
+//                textView.append(issue.fields.summary + issue.fields.description + issue.fields.priority.name
+//                        + issue.fields.status.name + System.lineSeparator())
+//        })
+
+
+        backlogViewModel.issues.observe(viewLifecycleOwner, {
+            for (issue in it)
+
+                textView.append(issue.fields.summary + issue.fields.description + issue.fields.priority.name
                         + issue.fields.status.name + System.lineSeparator())
         })
+
+
         return root
     }
 

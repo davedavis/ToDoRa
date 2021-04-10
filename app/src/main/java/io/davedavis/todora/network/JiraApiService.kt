@@ -16,26 +16,25 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Headers
+import retrofit2.http.Header
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 enum class JiraApiFilter(val value: String) {
-    SHOW_BACKLOG("backlog"),
-    SHOW_SELECTED_FOR_DEVELOPMENT("selected"),
-    SHOW_ALL("all") }
+    // ToDo - Dynamically generate this.
+    SHOW_BACKLOG("status=\"Backlog\""),
+    SHOW_SELECTED_FOR_DEVELOPMENT("status=\"Selected for Development\""),
+    SHOW_IN_PROGRESS("status=\"In Progress\""),
+    SHOW_DONE("status=\"Done\""),
+    SHOW_ALL("") }
 
 
+// Host interceptor to enable dynamic subdomain substitution as Jira uses subdomains for APU calls.
 class HostSelectionInterceptor: Interceptor {
-
     override fun intercept(chain: Interceptor.Chain): Response {
-
         var request = chain.request()
-
-
         val jiraSubdomain: String? = SharedPreferencesManager.getUserBaseUrl()
         val host = "$jiraSubdomain.atlassian.net"
-
         val newUrl = request.url.newBuilder()
             .host(host)
             .build()
@@ -55,8 +54,8 @@ private const val BASE_URL = "https://davedavis.atlassian.net/rest/api/latest/"
 //private const val BASE_URL = "http://192.168.1.144/"
 
 private val moshi = Moshi.Builder()
-    .add(KotlinJsonAdapterFactory())
-    .build()
+        .add(KotlinJsonAdapterFactory())
+        .build()
 
 // Set up interceptor for logging
 // https://stackoverflow.com/questions/37105278/httplogginginterceptor-not-logging-with-retrofit-2
@@ -88,15 +87,24 @@ private val retrofit = Retrofit.Builder()
 
 
 
-// ToDo: val jiraApiKey: String? = SharedPreferencesManager.getUserApiKey()
-// LEFT OFF HERE
-// Need to
+//val jiraApiKey: String? = SharedPreferencesManager.getUserApiKey()
+//val jiraLogin: String? = SharedPreferencesManager.getUserLogin()
+//var decodedAuth = "$jiraLogin:$jiraApiKey"
+//val encodedAuth = Base64.encodeToString(decodedAuth.toByteArray(charset("UTF-8")), Base64.DEFAULT)
+
+
+
 interface JiraApiService {
-    @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
-//    @GET("search?jql=project=\"TODORA\"")
+//    @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
     @GET("search")
-    suspend fun getIssues(@Query("jql\"=\"") type: String): JiraIssueResponse
+    suspend fun getIssues(@Header ("Authorization") encodedAuth: String?, @Query("jql") type: String): JiraIssueResponse
 }
+
+//interface JiraApiService {
+//    @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
+//    @GET("search")
+//    suspend fun getIssues(@Query("jql") type: String): JiraIssueResponse
+//}
 
 //Passing parameters: https://stackoverflow.com/questions/54338671/send-a-parameter-to-kotlin-retrofit-call
 //

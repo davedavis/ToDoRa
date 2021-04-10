@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 
 // Model for the response object.
 data class JiraIssueResponse(
-        val expand: String,
+        val expand: String?,
         val startAt: Int,
         val maxResults: Int,
         val total: Int,
@@ -27,19 +27,21 @@ data class JiraIssue (
 
 // Each issue has fields with the data we want. Each field also has nested fields. Like priority.
 data class Fields (
-        val summary : String,
-        val description : String,
+        val summary : String?,
+        val description : String?,
         @field:Json (name = "status") val status : Status,
         @field:Json (name = "priority") val priority: Priority
-)
+        )
+
+
 
 
 
 data class Priority (
-        val self : String,
-        val iconUrl : String,
-        val name : String,
-        val id : Int
+        val self : String?,
+        val iconUrl : String?,
+        val name : String?,
+        val id : Int?
 )
 
 
@@ -47,8 +49,8 @@ data class Priority (
 data class Status (
 
         val self : String,
-        val description : String,
-        val iconUrl : String,
+        val description : String?,
+        val iconUrl : String?,
         val name : String,
         val id : Int,
         @field:Json (name = "statusCategory") val statusCategory : StatusCategory

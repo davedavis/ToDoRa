@@ -6,9 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.davedavis.todora.network.JiraApi
-import io.davedavis.todora.network.JiraApiFilter
-import io.davedavis.todora.network.JiraIssueResponse
+import io.davedavis.todora.network.*
 import io.davedavis.todora.ui.home.AllApiStatus.*
 import kotlinx.coroutines.launch
 
@@ -23,8 +21,13 @@ class HomeViewModel (prefs: SharedPreferences) : ViewModel() {
         get() = _status
 
     // Actual Issues received from API LiveData
-    private val _issues = MutableLiveData<JiraIssueResponse>()
-    val issues: LiveData<JiraIssueResponse>
+    private val _jiraApiResponse = MutableLiveData<JiraIssueResponse>()
+    val jiraApiResponse: LiveData<JiraIssueResponse>
+        get() = _jiraApiResponse
+
+    // Actual Issues received from API LiveData
+    private val _issues = MutableLiveData<List<JiraIssue>>()
+    val issues: MutableLiveData<List<JiraIssue>>
         get() = _issues
 
 
@@ -70,7 +73,8 @@ class HomeViewModel (prefs: SharedPreferences) : ViewModel() {
         viewModelScope.launch {
             _status.value = LOADING
             try {
-                _issues.value = JiraApi.retrofitService.getIssues(filter.value)
+                _jiraApiResponse.value = JiraApi.retrofitService.getIssues(Auth.getAuthHeaders(), filter.value)
+                _issues.value = _jiraApiResponse.value!!.issues
                 Log.i(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", _issues.value.toString())
                 _status.value = DONE
             } catch (e: Exception) {

@@ -28,7 +28,12 @@
     <string name="backlog_sync">Backlog Sync</string>
     <string name="user_api_key">Jira API Key</string>
 
+    <!--    Auth pref keys-->
     <string name="prefs_api_key_key">user_api_key</string>
     <string name="prefs_jira_url_key">user_project_url</string>
-    <string name="prefs_jira_email">user_project_email</string>
+    <string name="prefs_jira_email">user_email</string>
+
+<!--    JQL Query Strings-->
+    <string name="jql_query_bcklog">status="Backlog"</string>
+
 </resources>
