@@ -1,81 +1,88 @@
 package io.davedavis.todora.ui.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.databinding.DataBindingUtil
+import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
+import androidx.navigation.fragment.findNavController
 import io.davedavis.todora.R
 import io.davedavis.todora.databinding.FragmentHomeBinding
+import io.davedavis.todora.ui.edit.EditFragmentDirections
 
 
 class HomeFragment : Fragment() {
 
-    private lateinit var viewModel: HomeViewModel
-    private lateinit var viewModelFactory: HomeViewModelFactory
+    /**
+     * Lazily initialize our [HomeViewModel].
+     */
+    private val viewModel: HomeViewModel by lazy {
+        ViewModelProvider(this).get(HomeViewModel::class.java)
+    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    /**
+     * Inflates the layout with Data Binding, sets its lifecycle owner to the OverviewFragment
+     * to enable Data Binding to observe LiveData, and sets up the RecyclerView with an adapter.
+     */
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-        // Set up ViewBinding
-        val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        val binding = FragmentHomeBinding.inflate(inflater)
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this.requireActivity())
-
-        viewModelFactory = HomeViewModelFactory(prefs)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
-
-        // Grab references to the views, using ViewBinding.
-        val textView: TextView = binding.textHome
-        val userNameTV: TextView = binding.homePrefUserName
-        val userEmailTV: TextView = binding.homePrefUserEmail
-        val userURLTV: TextView = binding.homePrefUrl
-        val userProjectIdTV: TextView = binding.homePrefProjectId
-        val userAPIKeyTV: TextView = binding.homePrefApiKey
-
-        // To Observe LiveData
+        // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this
 
+        // Giving the binding access to the OverviewViewModel
+        binding.viewModel = viewModel
 
-
-        // Set up livedata observers.
-//        viewModel.issues.observe(viewLifecycleOwner, Observer {
-//            for (issue in it.issues)
-//                textView.append(issue.fields.summary + issue.fields.description + issue.fields.priority.name
-//                        + issue.fields.status.name + System.lineSeparator())
-//        })
-
-
-        viewModel.issues.observe(viewLifecycleOwner, {
-            for (issue in it)
-                textView.append(issue.fields.summary + issue.fields.description + issue.fields.priority.name
-                        + issue.fields.status.name + System.lineSeparator())
+        // Sets the adapter of the issuesGrid RecyclerView with clickHandler lambda that
+        // tells the viewModel when the property is clicked
+        binding.issuesGrid.adapter = IssueAdapter(IssueAdapter.OnClickListener {
+            viewModel.displayIssueDetail(it)
         })
 
-
-        viewModel.userNameTVText.observe(viewLifecycleOwner, {
-            userNameTV.text = it
-        })
-
-        viewModel.userEmailTVText.observe(viewLifecycleOwner, {
-            userEmailTV.text = it
-        })
-
-        viewModel.userURLTVText.observe(viewLifecycleOwner, {
-            userURLTV.text = it
-        })
-
-        viewModel.userProjectIdTVText.observe(viewLifecycleOwner, {
-            userProjectIdTV.text = it
-        })
-
-        viewModel.userAPIKeyTVText.observe(viewLifecycleOwner, {
-            userAPIKeyTV.text = it
+        // Observe the navigateToSelectedIssue LiveData and Navigate when it isn't null
+        // After navigating, call displayIssueDetailsComplete() so that the ViewModel is ready
+        // for another navigation event.
+        viewModel.navigateToSelectedIssue.observe(viewLifecycleOwner, Observer {
+            if (null != it) {
+                this.findNavController()
+                    .navigate(
+                        EditFragmentDirections.actionShowEdit(
+                            it.id, it.fields.summary.toString(), it.fields.description.toString(),
+                            it.fields.priority.toString(), it.fields.timespent ?: 0
+                        )
+                    )
+                // Reset the Issue so navigation is released and works again. Otherwise, stuck on the issue.
+                viewModel.displayIssueDetailComplete()
+            }
         })
 
         return binding.root
     }
+
+    /**
+     * Inflates the overflow menu that contains filtering options.
+     */
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    /**
+     * Updates the filter in the [HomeViewModel] when the menu items are selected from the
+     * overflow menu.
+     */
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        viewModel.updateFilter(
+//                when (item.itemId) {
+//                    R.id.show_rent_menu -> MarsApiFilter.SHOW_RENT
+//                    R.id.show_buy_menu -> MarsApiFilter.SHOW_BUY
+//                    else -> MarsApiFilter.SHOW_ALL
+//                }
+//        )
+//        return true
+//    }
 }

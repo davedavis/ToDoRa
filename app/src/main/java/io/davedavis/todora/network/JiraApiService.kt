@@ -85,15 +85,6 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 
-
-
-//val jiraApiKey: String? = SharedPreferencesManager.getUserApiKey()
-//val jiraLogin: String? = SharedPreferencesManager.getUserLogin()
-//var decodedAuth = "$jiraLogin:$jiraApiKey"
-//val encodedAuth = Base64.encodeToString(decodedAuth.toByteArray(charset("UTF-8")), Base64.DEFAULT)
-
-
-
 interface JiraApiService {
 //    @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
     @GET("search")

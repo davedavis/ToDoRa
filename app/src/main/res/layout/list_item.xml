@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="property"
+            type="io.davedavis.todora.network.JiraIssue" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp">
+
+        <ImageView
+            android:id="@+id/issue_priority"
+            android:layout_width="36dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="36dp"
+            android:adjustViewBounds="true"
+            android:padding="2dp"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/issue_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:textAllCaps="true"
+                android:textColor="@color/teal_700"
+                android:textSize="12sp"
+                tools:text="30km S of" />
+
+            <TextView
+                android:id="@+id/issue_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/teal_200"
+                android:textSize="16sp"
+                tools:text="Long placeholder location that should wrap to more than 2 lines of text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/issue_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textColor="@color/teal_700"
+                android:textSize="12sp"
+                tools:text="Apr 11, 2021" />
+
+            <TextView
+                android:id="@+id/issue_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textColor="@color/teal_700"
+                android:textSize="12sp"
+                tools:text="25 mins" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content">-->
+
+    <!--        <ImageView-->
+    <!--            android:id="@+id/issue_priority"-->
+    <!--            android:layout_width="30dp"-->
+    <!--            android:layout_height="60dp"-->
+    <!--            android:layout_marginStart="16dp"-->
+    <!--            android:layout_marginTop="8dp"-->
+    <!--            android:layout_marginBottom="8dp"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--            tools:srcCompat="@drawable/ic_menu_camera" />-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/issue_summary"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="20dp"-->
+    <!--            android:layout_marginStart="8dp"-->
+    <!--            android:layout_marginTop="8dp"-->
+    <!--            android:layout_marginEnd="16dp"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toEndOf="@+id/issue_priority"-->
+    <!--            app:layout_constraintTop_toTopOf="@+id/issue_priority"-->
+    <!--            tools:text="Summary" />-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/issue_description"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="20dp"-->
+    <!--            android:layout_marginTop="8dp"-->
+    <!--            app:layout_constraintEnd_toEndOf="@+id/issue_summary"-->
+    <!--            app:layout_constraintHorizontal_bias="0.0"-->
+    <!--            app:layout_constraintStart_toStartOf="@+id/issue_summary"-->
+    <!--            app:layout_constraintTop_toBottomOf="@+id/issue_summary"-->
+    <!--            tools:text="Description" />-->
+
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+</layout>
+
+    <!--    <FrameLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="170dp">-->
+
+    <!--            <ImageView-->
+    <!--                android:id="@+id/issue_priority"-->
+    <!--                android:layout_width="30dp"-->
+    <!--                android:layout_height="60dp"-->
+    <!--                android:layout_marginStart="16dp"-->
+    <!--                android:layout_marginTop="8dp"-->
+    <!--                android:layout_marginBottom="8dp"-->
+    <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--                app:layout_constraintStart_toStartOf="parent"-->
+    <!--                app:layout_constraintTop_toTopOf="parent"-->
+    <!--                tools:srcCompat="@drawable/ic_menu_camera" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/issue_summary"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="20dp"-->
+    <!--                android:layout_marginStart="8dp"-->
+    <!--                android:layout_marginTop="8dp"-->
+    <!--                android:layout_marginEnd="16dp"-->
+    <!--                app:layout_constraintEnd_toEndOf="parent"-->
+    <!--                app:layout_constraintStart_toEndOf="@+id/issue_priority"-->
+    <!--                app:layout_constraintTop_toTopOf="@+id/issue_priority"-->
+    <!--                tools:text="Summary" />-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/issue_description"-->
+    <!--            android:layout_width="111dp"-->
+    <!--            android:layout_height="20dp"-->
+    <!--            android:layout_marginStart="8dp"-->
+    <!--            android:layout_marginTop="8dp"-->
+    <!--            android:layout_marginEnd="16dp"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toEndOf="@+id/issue_priority"-->
+    <!--            app:layout_constraintTop_toTopOf="@+id/issue_priority"-->
+    <!--            tools:text="@string/nav_app_bar_open_drawer_description" />-->
+
+    <!--    </FrameLayout>-->
+    <!--</layout>-->
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--<androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--    xmlns:tools="http://schemas.android.com/tools"-->
+    <!--    android:orientation="vertical"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="wrap_content">-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/issue_priority"-->
+    <!--        android:layout_width="30dp"-->
+    <!--        android:layout_height="60dp"-->
+    <!--        android:layout_marginStart="16dp"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:layout_marginBottom="8dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        tools:srcCompat="@drawable/ic_menu_camera" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/issue_summary"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="20dp"-->
+    <!--        android:layout_marginStart="8dp"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:layout_marginEnd="16dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/issue_priority"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/issue_priority"-->
+    <!--        tools:text="Summary" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/issue_description"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="20dp"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/issue_summary"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/issue_summary"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/issue_summary"-->
+    <!--        tools:text="Description" />-->
+
+    <!--</androidx.constraintlayout.widget.ConstraintLayout>-->

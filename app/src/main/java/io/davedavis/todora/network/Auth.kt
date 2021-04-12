@@ -8,8 +8,6 @@ import io.davedavis.todora.utils.SharedPreferencesManager
 // in ViewModels.
 
 class Auth {
-
-
     // Base64 Encode Auth Parameter Payload
     // https://developer.android.com/reference/kotlin/android/util/Base64
     companion object {

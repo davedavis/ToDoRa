@@ -1,26 +1,22 @@
 package io.davedavis.todora.ui.home
 
-import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.davedavis.todora.network.*
-import io.davedavis.todora.ui.home.AllApiStatus.*
 import kotlinx.coroutines.launch
 
-enum class AllApiStatus { LOADING, ERROR, DONE }
 
-class HomeViewModel (prefs: SharedPreferences) : ViewModel() {
+enum class JiraAPIStatus { LOADING, ERROR, DONE }
+
+class HomeViewModel() : ViewModel() {
 
 
-    // Status LiveData
-    private val _status = MutableLiveData<AllApiStatus>()
-    val status: LiveData<AllApiStatus>
-        get() = _status
-
-    // Actual Issues received from API LiveData
+    /**
+     * Actual response from the API, a single response object with nested [JiraIssue]
+     * objects serialized within. Keeping it separate for future development.
+     */
     private val _jiraApiResponse = MutableLiveData<JiraIssueResponse>()
     val jiraApiResponse: LiveData<JiraIssueResponse>
         get() = _jiraApiResponse
@@ -30,61 +26,71 @@ class HomeViewModel (prefs: SharedPreferences) : ViewModel() {
     val issues: MutableLiveData<List<JiraIssue>>
         get() = _issues
 
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is the Home Fragment"
-    }
-    val text: LiveData<String> = _text
-
-
-    private val _userNameTVText = MutableLiveData<String>().apply {
-        value = prefs.getString("user_name", "No Name Found")
-    }
-    val userNameTVText: LiveData<String> = _userNameTVText
+    // The internal MutableLiveData that stores the status of the most recent request
+    private val _status = MutableLiveData<JiraAPIStatus>()
+    val status: LiveData<JiraAPIStatus>
+        get() = _status
 
 
-    private val _userEmailTVText = MutableLiveData<String>().apply {
-        value = prefs.getString("user_email", "No Email Found")
-    }
-    val userEmailTVText: LiveData<String> = _userEmailTVText
-
-    private val _userURLTVText = MutableLiveData<String>().apply {
-        value = prefs.getString("user_project_url", "No Project URL Found")
-    }
-    val userURLTVText: LiveData<String> = _userURLTVText
-
-    private val _userProjectIdTVText = MutableLiveData<String>().apply {
-        value = prefs.getString("user_project_id", "No Project ID Found")
-    }
-    val userProjectIdTVText: LiveData<String> = _userProjectIdTVText
+    // LiveData for navigating to the selected issue edit fragment.
+    private val _navigateToSelectedIssue = MutableLiveData<JiraIssue?>()
+    val navigateToSelectedIssue: MutableLiveData<JiraIssue?>
+        get() = _navigateToSelectedIssue
 
 
-    private val _userAPIKeyTVText = MutableLiveData<String>().apply {
-        value = prefs.getString("user_api_key", "No API Key Found")
-    }
-    val userAPIKeyTVText: LiveData<String> = _userAPIKeyTVText
-
-    // Immediate init call to the APU
+    /**
+     * Call getJiraIssues() on init so we can display issues immediately.
+     */
     init {
         getJiraIssues(JiraApiFilter.SHOW_ALL)
     }
 
+    /**
+     * Gets filtered Jira Issue information from the Jira API Retrofit service and
+     * updates the [JiraIssue] [List] and [JiraAPIStatus] [LiveData]. The Retrofit service
+     * returns a coroutine Deferred, which we await to get the result of the transaction.
+     * @param filter the [JiraApiFilter] that is sent as part of the web server request
+     */
     private fun getJiraIssues(filter: JiraApiFilter) {
         viewModelScope.launch {
-            _status.value = LOADING
+            _status.value = JiraAPIStatus.LOADING
             try {
-                _jiraApiResponse.value = JiraApi.retrofitService.getIssues(Auth.getAuthHeaders(), filter.value)
+                _jiraApiResponse.value =
+                    JiraApi.retrofitService.getIssues(Auth.getAuthHeaders(), filter.value)
                 _issues.value = _jiraApiResponse.value!!.issues
-                Log.i(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", _issues.value.toString())
-                _status.value = DONE
+//                    _properties.value = _issues.value
+                _status.value = JiraAPIStatus.DONE
             } catch (e: Exception) {
-                Log.i(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", e.toString())
-                _status.value = ERROR
-
+                _status.value = JiraAPIStatus.ERROR
+//                    _properties.value = ArrayList()
+                _issues.value = ArrayList()
             }
         }
     }
 
+    /**
+     * Updates the data set filter for the web services by querying the data with the new filter
+     * by calling [getJiraIssues]
+     * @param filter the [JiraApiFilter] that is sent as part of the web server request
+     */
+    fun updateFilter(filter: JiraApiFilter) {
+        getJiraIssues(filter)
+    }
 
+    /**
+     * When the issue/to-do is clicked, set the [_navigateToSelectedIssue] [MutableLiveData]
+     * @param jiraIssue The [JiraIssue] that was clicked on.
+     */
+    fun displayIssueDetail(jiraIssue: JiraIssue) {
+        _navigateToSelectedIssue.value = jiraIssue
+    }
 
+    /**
+     * After the navigation has taken place, make sure navigateToSelectedIssue is set to null
+     */
+    fun displayIssueDetailComplete() {
+        _navigateToSelectedIssue.value = null
+    }
 }
+
+

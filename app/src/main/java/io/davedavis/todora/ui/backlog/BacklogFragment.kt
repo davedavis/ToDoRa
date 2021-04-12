@@ -23,12 +23,6 @@ class BacklogFragment : Fragment() {
 
         val textView: TextView = root.findViewById(R.id.text_backlog)
 
-//        backlogViewModel.jiraApiResponse.observe(viewLifecycleOwner, {
-//            for (issue in it.issues)
-//                textView.append(issue.fields.summary + issue.fields.description + issue.fields.priority.name
-//                        + issue.fields.status.name + System.lineSeparator())
-//        })
-
 
         backlogViewModel.issues.observe(viewLifecycleOwner, {
             for (issue in it)

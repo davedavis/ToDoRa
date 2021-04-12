@@ -11,6 +11,9 @@
         android:name="io.davedavis.todora.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
+    <action
+        android:id="@+id/action_showEdit"
+        app:destination="@id/nav_edit" />
 
     <fragment
         android:id="@+id/nav_backlog"
@@ -25,14 +28,39 @@
         tools:layout="@layout/fragment_create" />
 
     <fragment
+        android:id="@+id/nav_edit"
+        android:name="io.davedavis.todora.ui.edit.EditFragment"
+        android:label="@string/edit"
+        tools:layout="@layout/fragment_edit">
+        <argument
+            android:name="selectedIssueId"
+            app:argType="string" />
+        <argument
+            android:name="selectedIssueSummary"
+            app:argType="string" />
+        <argument
+            android:name="selectedIssueDescription"
+            app:argType="string" />
+        <argument
+            android:name="selectedIssuePriority"
+            app:argType="string" />
+
+        <argument
+            android:name="selectedIssueTimeSpent"
+            app:argType="long" />
+    </fragment>
+
+
+    <fragment
         android:id="@+id/nav_debug"
         android:name="io.davedavis.todora.ui.debug.DebugFragment"
         android:label="@string/debug"
-        tools:layout="@layout/fragment_debug" >
+        tools:layout="@layout/fragment_debug">
         <action
             android:id="@+id/action_nav_debug_to_settingsFragment"
             app:destination="@id/settings" />
     </fragment>
+
 
     <!--Settings fragment-->
     <fragment

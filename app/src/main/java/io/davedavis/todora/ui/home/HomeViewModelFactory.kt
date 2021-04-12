@@ -1,6 +1,5 @@
 package io.davedavis.todora.ui.home
 
-import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
@@ -8,10 +7,10 @@ import androidx.lifecycle.ViewModelProvider
 // Shared preferences in view models need to be accessed this way.
 
 @SuppressWarnings("unchecked")
-class HomeViewModelFactory(private val prefs: SharedPreferences) : ViewModelProvider.Factory {
+class HomeViewModelFactory() : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(prefs) as T
+            return HomeViewModel() as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

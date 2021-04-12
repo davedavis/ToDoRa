@@ -6,4 +6,22 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/show_backlog"
+        android:title="@string/backlog" />
+    <item
+        android:id="@+id/show_selected"
+        android:title="@string/selected" />
+    <item
+        android:id="@+id/show_wip"
+        android:title="@string/wip" />
+
+    <item
+        android:id="@+id/show_done"
+        android:title="@string/done" />
+
+    <item
+        android:id="@+id/show_all_issues"
+        android:title="@string/all" />
 </menu>
