@@ -94,6 +94,8 @@ interface JiraApiService {
     @PUT("issue")
 //    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue : JiraIssue): Response
     fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue: JiraIssue): Response
+
+
 }
 
 //interface JiraApiService {

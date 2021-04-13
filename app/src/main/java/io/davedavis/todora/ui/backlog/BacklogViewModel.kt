@@ -42,11 +42,12 @@ class BacklogViewModel : ViewModel() {
         viewModelScope.launch {
             _status.value = JiraApiStatus.LOADING
             try {
-                _jiraApiResponse.value = JiraApi.retrofitService.getIssues(Auth.getAuthHeaders(), filter.value)
+                _jiraApiResponse.value =
+                    JiraApi.retrofitService.getIssues(Auth.getAuthHeaders(), filter.value)
                 _issues.value = _jiraApiResponse.value!!.issues
 
-                Log.i(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", _jiraApiResponse.value.toString())
-                Log.i(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", _issues.value.toString())
+                Log.i(">>>>>>>>>>>>>>", _jiraApiResponse.value.toString())
+                Log.i(">>>>>>>>>>>>>>", _issues.value.toString())
                 _status.value = JiraApiStatus.DONE
             } catch (e: Exception) {
                 _status.value = JiraApiStatus.ERROR

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.davedavis.todora.R
 import io.davedavis.todora.databinding.FragmentHomeBinding
+import io.davedavis.todora.model.ParcelableIssue
 import io.davedavis.todora.ui.edit.EditFragmentDirections
 
 
@@ -52,19 +53,38 @@ class HomeFragment : Fragment() {
         viewModel.navigateToSelectedIssue.observe(viewLifecycleOwner, Observer {
             if (null != it) {
 
-                Log.i("DaveEdit >>>>>", it.id + System.lineSeparator() + it.fields.summary.toString() + System.lineSeparator() + it.fields.description.toString() + System.lineSeparator() +
-                        it.fields.priority.toString() + System.lineSeparator() + (it.fields.timespent
-                        ?: 0))
+                Log.i(
+                    "DaveEdit >>>>>",
+                    it.id + System.lineSeparator() + it.fields.summary.toString() + System.lineSeparator() + it.fields.description.toString() + System.lineSeparator() +
+                            it.fields.priority.toString() + System.lineSeparator() + (it.fields.timespent
+                        ?: 0)
+                )
+
+                var parcelableEditIssue = ParcelableIssue(
+                    it.fields.summary.toString(),
+                    it.fields.description.toString(),
+                    it.id,
+                    "TODORA",
+                    it.fields.priority.name.toString(),
+                    it.fields.timespent ?: 0,
+                    "self"
+                )
+
+                Log.i("ParcelableEdit>>>", parcelableEditIssue.toString())
 
                 this.findNavController()
-                        .navigate(
-                                EditFragmentDirections.actionShowEdit(
-                                        it.id, it.fields.summary.toString(), it.fields.description.toString(),
-                                        it.fields.priority.name.toString(), it.fields.timespent ?: 0
+                    // Create a parcelable issue so we can pass and use it in EditFragment.
 
 
-                                )
+                    .navigate(
+                        EditFragmentDirections.actionShowEdit(
+                            it.id, it.fields.summary.toString(), it.fields.description.toString(),
+                            it.fields.priority.name.toString(), it.fields.timespent ?: 0,
+                            parcelableEditIssue
+
+
                         )
+                    )
 
                 // Reset the Issue so navigation is released and works again. Otherwise, stuck on the issue.
                 viewModel.displayIssueDetailComplete()

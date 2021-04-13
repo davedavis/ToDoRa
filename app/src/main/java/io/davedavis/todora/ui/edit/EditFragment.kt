@@ -29,11 +29,13 @@ class EditFragment : Fragment() {
         val jiraIssueSummary = EditFragmentArgs.fromBundle(requireArguments()).selectedIssueSummary
         val jiraIssueDescription = EditFragmentArgs.fromBundle(requireArguments()).selectedIssueDescription
         val jiraIssuePriority = EditFragmentArgs.fromBundle(requireArguments()).selectedIssuePriority
-        val jiraIssueTimeSpent = EditFragmentArgs.fromBundle(requireArguments()).selectedIssueTimeSpent
+        val jiraIssueTimeSpent =
+            EditFragmentArgs.fromBundle(requireArguments()).selectedIssueTimeSpent
+        val jiraIssueObject = EditFragmentArgs.fromBundle(requireArguments()).parcelableIssueObject
 
         val viewModelFactory = EditViewModelFactory(
-                jiraIssueId, jiraIssueSummary, jiraIssueDescription,
-                jiraIssuePriority, jiraIssueTimeSpent, application
+            jiraIssueId, jiraIssueSummary, jiraIssueDescription,
+            jiraIssuePriority, jiraIssueTimeSpent, jiraIssueObject, application
         )
 
         binding.viewModel = ViewModelProvider(
@@ -41,18 +43,25 @@ class EditFragment : Fragment() {
         ).get(EditViewModel::class.java)
 
         binding.sumbitIssueButton.setOnClickListener {
-            Log.i("EditFragment >>>>>", "Button Clicked!" +
-                    System.lineSeparator() +
-                    jiraIssueId +
-                    System.lineSeparator() +
-                    jiraIssueSummary +
-                    System.lineSeparator() +
-                    jiraIssueDescription +
-                    System.lineSeparator() +
-                    jiraIssuePriority +
-                    System.lineSeparator() +
-                    jiraIssueTimeSpent +
-                    System.lineSeparator()
+            Log.i(
+                "EditFragment >>>>>", "Button Clicked!" +
+                        System.lineSeparator() +
+                        jiraIssueId +
+                        System.lineSeparator() +
+                        jiraIssueSummary +
+                        System.lineSeparator() +
+                        jiraIssueDescription +
+                        System.lineSeparator() +
+                        jiraIssuePriority +
+                        System.lineSeparator() +
+                        jiraIssueTimeSpent +
+                        System.lineSeparator()
+            )
+
+            Log.i(
+                "EditFragment >>>>>", "Issue Object !" +
+                        jiraIssueObject.toString() +
+                        System.lineSeparator()
             )
 
             // ToDo: Create ViewModel for Edit.
