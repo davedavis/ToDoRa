@@ -33,7 +33,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/summaryEditText"
-                    android:text="@{viewModel.issueSummary}"
+                    android:text="@{viewModel.selectedIssue.summary}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -51,7 +51,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/descriptionEditText"
-                    android:text="@{viewModel.issueDescription}"
+                    android:text="@{viewModel.selectedIssue.description}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -69,7 +69,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/priorityEditText"
-                    android:text="@{viewModel.issuePriority}"
+                    android:text="@{viewModel.selectedIssue.priority}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -87,7 +87,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/timespentEditText"
-                    android:text="@{viewModel.issueTimeSpent}"
+                    android:text="@{viewModel.selectedIssue.timespent.toString()}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

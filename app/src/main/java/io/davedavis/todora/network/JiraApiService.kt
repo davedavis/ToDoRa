@@ -4,10 +4,14 @@
 //-H "Content-Type: application/json" \
 //https://davedavis.atlassian.net/rest/api/2/search?jql=project="TODORA"
 
+
+// API DOCUMENTATION https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-issueidorkey-put
+
 package io.davedavis.todora.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.davedavis.todora.model.ParcelableIssue
 import io.davedavis.todora.utils.SharedPreferencesManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -67,14 +71,14 @@ private val interceptor = run {
 }
 
 private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(interceptor)
-        .addInterceptor(HostSelectionInterceptor())
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .build()
+    .addInterceptor(interceptor)
+    .addInterceptor(HostSelectionInterceptor())
+    .connectTimeout(5, TimeUnit.SECONDS)
+    .writeTimeout(5, TimeUnit.SECONDS)
+    .readTimeout(5, TimeUnit.SECONDS)
+    .build()
 
-
+// Possible create the client: https://stackoverflow.com/questions/58038917/unable-to-successfully-send-a-post-request-using-retrofit-2-6-1-problems-with
 
 
 private val retrofit = Retrofit.Builder()
@@ -91,10 +95,22 @@ interface JiraApiService {
     // curl -D-    -u dave@davedavis.io:MpkWzHiXp3QdnrtdSZdqF38A    -X PUT    -H "Content-Type: application/json"
     // https://davedavis.atlassian.net/rest/api/2/issue/TODORA-10 --data '{ "fields": {"summary": "new summary"} }'
 
+    //    @FormUrlEncoded
+//    @Headers("Content-Type: application/json")
     @PUT("issue")
 //    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue : JiraIssue): Response
-    fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue: JiraIssue): Response
+//    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue: ParcelableIssue?) : ParcelableIssue
+//    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Query("jql") issue: ParcelableIssue?): JiraIssueResponse
+    suspend fun updateJiraIssue(
+        @Header("Authorization") encodedAuth: String?,
+        @Body issue: ParcelableIssue?
+    ): JiraIssueResponse
 
+    //////////////////////////////////////////////////////////
+    // ToDo: THIS IS THE BEST EXAMPLE OF WHAT I"M TRYING TO DO: https://stackoverflow.com/questions/66221360/android-make-post-request-with-retrofit
+    ////////////////////////////////////////////////////////////
+
+    // https://johncodeos.com/how-to-make-post-get-put-and-delete-requests-with-retrofit-using-kotlin/
 
 }
 

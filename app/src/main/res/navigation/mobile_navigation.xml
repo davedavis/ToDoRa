@@ -33,23 +33,6 @@
         android:label="@string/edit"
         tools:layout="@layout/fragment_edit">
         <argument
-            android:name="selectedIssueId"
-            app:argType="string" />
-        <argument
-            android:name="selectedIssueSummary"
-            app:argType="string" />
-        <argument
-            android:name="selectedIssueDescription"
-            app:argType="string" />
-        <argument
-            android:name="selectedIssuePriority"
-            app:argType="string" />
-
-        <argument
-            android:name="selectedIssueTimeSpent"
-            app:argType="long" />
-
-        <argument
             android:name="parcelableIssueObject"
             app:argType="io.davedavis.todora.model.ParcelableIssue" />
     </fragment>

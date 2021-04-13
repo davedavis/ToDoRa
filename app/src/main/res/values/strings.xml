@@ -32,6 +32,7 @@
     <string name="prefs_api_key_key">user_api_key</string>
     <string name="prefs_jira_url_key">user_project_url</string>
     <string name="prefs_jira_email">user_email</string>
+    <string name="prefs_project_id">user_project</string>
 
     <!--    JQL Query Strings-->
     <string name="jql_query_bcklog">status="Backlog"</string>
