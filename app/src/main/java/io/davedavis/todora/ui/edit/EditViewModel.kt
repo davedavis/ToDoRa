@@ -11,7 +11,6 @@ class EditViewModel(
     jiraIssueSummary: String,
     jiraIssueDescription: String,
     jiraIssuePriority: String,
-    jiraIssueStatus: String,
     jiraIssueTimeSpent: Long,
     app: Application
 ) : AndroidViewModel(app) {
@@ -22,12 +21,17 @@ class EditViewModel(
         get() = _selectedProperty
 
     // Initialize the _selectedProperty MutableLiveData
-    init {
-//        _selectedProperty.value = jiraIssue
-    }
+//    init {
+////        _selectedProperty.value = jiraIssue
+//    }
 
 
     val issueSummary = jiraIssueSummary
     val issueDescription = jiraIssueDescription
+    val issuePriority = jiraIssuePriority
+    val issueTimeSpent = jiraIssueTimeSpent.toString()
 
+
+    //ToDo: Share livedata between fragments.
+    // https://bladecoder.medium.com/advanced-json-parsing-techniques-using-moshi-and-kotlin-daf56a7b963d
 }

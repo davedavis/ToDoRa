@@ -15,9 +15,7 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
+import retrofit2.http.*
 import java.util.concurrent.TimeUnit
 
 enum class JiraApiFilter(val value: String) {
@@ -86,9 +84,16 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface JiraApiService {
-//    @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
+    //    @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
     @GET("search")
-    suspend fun getIssues(@Header ("Authorization") encodedAuth: String?, @Query("jql") type: String): JiraIssueResponse
+    suspend fun getIssues(@Header("Authorization") encodedAuth: String?, @Query("jql") type: String): JiraIssueResponse
+
+    // curl -D-    -u dave@davedavis.io:MpkWzHiXp3QdnrtdSZdqF38A    -X PUT    -H "Content-Type: application/json"
+    // https://davedavis.atlassian.net/rest/api/2/issue/TODORA-10 --data '{ "fields": {"summary": "new summary"} }'
+
+    @PUT("issue")
+//    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue : JiraIssue): Response
+    fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue: JiraIssue): Response
 }
 
 //interface JiraApiService {

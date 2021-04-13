@@ -34,6 +34,7 @@ class HomeViewModel() : ViewModel() {
 
     // LiveData for navigating to the selected issue edit fragment.
     private val _navigateToSelectedIssue = MutableLiveData<JiraIssue?>()
+
     val navigateToSelectedIssue: MutableLiveData<JiraIssue?>
         get() = _navigateToSelectedIssue
 

@@ -1,6 +1,7 @@
 package io.davedavis.todora.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -46,15 +47,25 @@ class HomeFragment : Fragment() {
         // Observe the navigateToSelectedIssue LiveData and Navigate when it isn't null
         // After navigating, call displayIssueDetailsComplete() so that the ViewModel is ready
         // for another navigation event.
+
+
         viewModel.navigateToSelectedIssue.observe(viewLifecycleOwner, Observer {
             if (null != it) {
+
+                Log.i("DaveEdit >>>>>", it.id + System.lineSeparator() + it.fields.summary.toString() + System.lineSeparator() + it.fields.description.toString() + System.lineSeparator() +
+                        it.fields.priority.toString() + System.lineSeparator() + (it.fields.timespent
+                        ?: 0))
+
                 this.findNavController()
-                    .navigate(
-                        EditFragmentDirections.actionShowEdit(
-                            it.id, it.fields.summary.toString(), it.fields.description.toString(),
-                            it.fields.priority.toString(), it.fields.timespent ?: 0
+                        .navigate(
+                                EditFragmentDirections.actionShowEdit(
+                                        it.id, it.fields.summary.toString(), it.fields.description.toString(),
+                                        it.fields.priority.name.toString(), it.fields.timespent ?: 0
+
+
+                                )
                         )
-                    )
+
                 // Reset the Issue so navigation is released and works again. Otherwise, stuck on the issue.
                 viewModel.displayIssueDetailComplete()
             }

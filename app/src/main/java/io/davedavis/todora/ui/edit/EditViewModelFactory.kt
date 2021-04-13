@@ -20,9 +20,8 @@ class EditViewModelFactory(
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(EditViewModel::class.java)) {
             return EditViewModel(
-                jiraIssueId, jiraIssueSummary, jiraIssueSummary,
-                jiraIssueDescription, jiraIssuePriority,
-                jiraIssueTimeSpent, application
+                    jiraIssueId, jiraIssueSummary, jiraIssueDescription,
+                    jiraIssuePriority, jiraIssueTimeSpent, application
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
