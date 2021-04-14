@@ -1,15 +1,16 @@
 package io.davedavis.todora
 
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import io.davedavis.todora.model.JiraAPIStatus
 import io.davedavis.todora.model.PriorityOptions
 import io.davedavis.todora.network.JiraIssue
 import io.davedavis.todora.network.JiraIssueResponse
 import io.davedavis.todora.ui.home.IssueAdapter
-import io.davedavis.todora.ui.home.JiraAPIStatus
 import timber.log.Timber
 
 
@@ -48,6 +49,7 @@ fun bindJiraApiStatus(statusImageView: ImageView, status: JiraAPIStatus?) {
 }
 
 // TODO: Continue from here: https://stackoverflow.com/questions/58737505/autocompletetextview-or-spinner-data-binding-in-android
+// an here: https://gist.github.com/fonix232/6553f66d17746dca5d062eecf40e8b3b
 
 
 // To Set Listner:
@@ -55,15 +57,21 @@ fun bindJiraApiStatus(statusImageView: ImageView, status: JiraAPIStatus?) {
 @BindingAdapter("priorityOption")
 fun bindPriorityOptions(priorityOption: AutoCompleteTextView, priority: PriorityOptions?) {
     when (priority) {
-        PriorityOptions.HIGHEST -> {
+        PriorityOptions.Highest -> {
 //            statusImageView.visibility = View.VISIBLE
             Timber.i("Highest Selected")
             priorityOption.setText("TEST")
 
         }
-        PriorityOptions.HIGH -> {
+        PriorityOptions.High -> {
             Timber.i("High Selected")
 
         }
     }
+}
+
+
+@BindingAdapter("android:adapter")
+fun setAutoCompleteAdapter(textView: AutoCompleteTextView, adapter: ArrayAdapter<*>) {
+    textView.setAdapter(adapter)
 }

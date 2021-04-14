@@ -45,7 +45,7 @@ data class Fields(
         @Json(name = "summary")
         var summary: String?,
         @Json(name = "description")
-        val description: String?,
+        var description: String?,
         @Json(name = "priority")
         val priority: Priority?,
 
@@ -58,7 +58,7 @@ data class Fields(
 @JsonClass(generateAdapter = true)
 data class Priority(
         @Json(name = "name")
-        val name: String?
+        var name: String?
 
 ) : Parcelable
 

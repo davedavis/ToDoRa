@@ -42,6 +42,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/description_field"
+                android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -55,27 +56,28 @@
                     android:text="@{viewModel.selectedIssue.fields.description}"
                     android:afterTextChanged="@{(text) -> viewModel.onDescriptionTextChange(text)}"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/priority_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="Priority"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/description_field">
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                android:id="@+id/priority_field"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="16dp"-->
+            <!--                android:hint="Priority"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/description_field">-->
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/priorityEditText"
-                    android:text="@{viewModel.selectedIssue.fields.priority.name}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/priorityEditText"-->
+            <!--                    android:text="@{viewModel.selectedIssue.fields.priority.name}"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content" />-->
 
-            </com.google.android.material.textfield.TextInputLayout>
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -84,8 +86,9 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="16dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/priority_field"
+                app:layout_constraintTop_toBottomOf="@id/description_field"
                 android:hint="priority">
+
 
                 <AutoCompleteTextView
                     android:id="@+id/dropdown"

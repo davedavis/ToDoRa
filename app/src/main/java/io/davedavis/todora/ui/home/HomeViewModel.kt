@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.davedavis.todora.model.JiraAPIStatus
 import io.davedavis.todora.network.*
 import kotlinx.coroutines.launch
 
 
-enum class JiraAPIStatus { LOADING, ERROR, DONE }
+//enum class JiraAPIStatus { LOADING, ERROR, DONE }
 
 class HomeViewModel() : ViewModel() {
 

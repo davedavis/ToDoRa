@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.davedavis.todora.model.JiraAPIStatus
 import io.davedavis.todora.model.ParcelableIssue
 import io.davedavis.todora.model.PriorityOptions
 import io.davedavis.todora.network.Auth
 import io.davedavis.todora.network.JiraApi
-import io.davedavis.todora.ui.home.JiraAPIStatus
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -39,12 +39,13 @@ class EditViewModel(
 
     // The internal MutableLiveData that stores the status of the API request
     private val _updateResponse = MutableLiveData<okhttp3.Response>()
-    val updateresponse: LiveData<okhttp3.Response>
+    val updateResponse: LiveData<okhttp3.Response>
         get() = _updateResponse
 
     // Initialize the _selectedProperty MutableLiveData
     init {
         _selectedIssue.value = jiraIssueObject
+        _priority.value = PriorityOptions.valueOf(jiraIssueObject.fields?.priority?.name.toString())
 
     }
 
@@ -55,11 +56,18 @@ class EditViewModel(
     fun onSummaryTextChange(updatedSummary: Editable?) {
         Log.d("TAG", "New text: ${updatedSummary.toString()}")
         _selectedIssue.value?.fields?.summary = updatedSummary.toString()
+
+    }
+
+    fun updatePriority(updatedPriority: Int) {
+        Log.d("PRIORITY TEST", PriorityOptions.values()[updatedPriority].toString())
+        _selectedIssue.value?.fields?.priority?.name = PriorityOptions.values()[updatedPriority].toString()
+
     }
 
     fun onDescriptionTextChange(updatedDescription: Editable?) {
         Log.d("TAG", "New text: ${updatedDescription.toString()}")
-        _selectedIssue.value?.fields?.summary = updatedDescription.toString()
+        _selectedIssue.value?.fields?.description = updatedDescription.toString()
     }
 
 
