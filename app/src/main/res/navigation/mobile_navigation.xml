@@ -35,6 +35,10 @@
         <argument
             android:name="parcelableIssueObject"
             app:argType="io.davedavis.todora.model.ParcelableIssue" />
+
+        <argument
+            android:name="issueKey"
+            app:argType="string" />
     </fragment>
 
 

@@ -59,11 +59,9 @@ class HomeViewModel() : ViewModel() {
                 _jiraApiResponse.value =
                     JiraApi.retrofitService.getIssues(Auth.getAuthHeaders(), filter.value)
                 _issues.value = _jiraApiResponse.value!!.issues
-//                    _properties.value = _issues.value
                 _status.value = JiraAPIStatus.DONE
             } catch (e: Exception) {
                 _status.value = JiraAPIStatus.ERROR
-//                    _properties.value = ArrayList()
                 _issues.value = ArrayList()
             }
         }

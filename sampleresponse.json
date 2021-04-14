@@ -45,11 +45,6 @@
           "description":"Work has been completed on this issue.",
           "name":"Done"
         },
-        "customfield_10027":[
-
-        ],
-        "customfield_10028":null,
-        "customfield_10029":null,
         "resolutiondate":"2021-04-06T22:10:59.573+0100",
         "workratio":-1,
         "lastViewed":"2021-04-06T22:10:52.954+0100",
@@ -59,10 +54,6 @@
           "isWatching":true
         },
         "created":"2021-04-06T22:10:52.531+0100",
-        "customfield_10020":null,
-        "customfield_10021":null,
-        "customfield_10022":null,
-        "customfield_10023":null,
         "priority":{
           "self":"https://davedavis.atlassian.net/rest/api/2/priority/3",
           "iconUrl":"https://davedavis.atlassian.net/images/icons/priorities/medium.svg",

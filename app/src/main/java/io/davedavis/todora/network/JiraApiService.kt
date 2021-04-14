@@ -97,13 +97,14 @@ interface JiraApiService {
 
     //    @FormUrlEncoded
 //    @Headers("Content-Type: application/json")
-    @PUT("issue")
+    @PUT("issue/{jiraIssueKey}")
 //    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue : JiraIssue): Response
 //    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue: ParcelableIssue?) : ParcelableIssue
 //    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Query("jql") issue: ParcelableIssue?): JiraIssueResponse
     suspend fun updateJiraIssue(
-        @Header("Authorization") encodedAuth: String?,
-        @Body issue: ParcelableIssue?
+            @Header("Authorization") encodedAuth: String?,
+            @Body issue: ParcelableIssue?,
+            @Path("jiraIssueKey") jiraIssueKey: String
     ): JiraIssueResponse
 
     //////////////////////////////////////////////////////////

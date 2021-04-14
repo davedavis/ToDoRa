@@ -8,9 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.davedavis.todora.R
 import io.davedavis.todora.databinding.FragmentHomeBinding
+import io.davedavis.todora.model.Fields
 import io.davedavis.todora.model.ParcelableIssue
+import io.davedavis.todora.model.Priority
 import io.davedavis.todora.ui.edit.EditFragmentDirections
-import io.davedavis.todora.utils.SharedPreferencesManager
 import timber.log.Timber
 
 
@@ -50,29 +51,24 @@ class HomeFragment : Fragment() {
         // After navigating, call displayIssueDetailsComplete() so that the ViewModel is ready
         // for another navigation event.
 
-
         viewModel.navigateToSelectedIssue.observe(viewLifecycleOwner, Observer {
             if (null != it) {
+                Timber.i(it.key)
 
-                val parcelableEditIssue = ParcelableIssue(
-                    it.fields.summary.toString(),
-                    it.fields.description.toString(),
-                    it.id,
-                    SharedPreferencesManager.getUserProject(),
-                    it.fields.priority.name.toString(),
-                    it.fields.timespent ?: 0,
-                    "self"
-                )
+                val parcelableEditIssue = ParcelableIssue(Fields(
+                        it.fields.summary.toString(),
+                        it.fields.description.toString(),
+                        Priority(it.fields.priority.name.toString()),
+//                        it.fields.timespent ?: 0
+                ))
 
-                Timber.i(parcelableEditIssue.toString())
+
+
 
                 this.findNavController()
-                    // Create a parcelable issue so we can pass and use it in EditFragment.
-
-
-                    .navigate(
-                        EditFragmentDirections.actionShowEdit(parcelableEditIssue)
-                    )
+                        .navigate(
+                                EditFragmentDirections.actionShowEdit(parcelableEditIssue, it.key)
+                        )
 
                 // Reset the Issue so navigation is released and works again. Otherwise, stuck on the issue.
                 viewModel.displayIssueDetailComplete()
