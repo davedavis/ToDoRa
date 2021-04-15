@@ -98,14 +98,11 @@ interface JiraApiService {
     //    @FormUrlEncoded
 //    @Headers("Content-Type: application/json")
     @PUT("issue/{jiraIssueKey}")
-//    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue : JiraIssue): Response
-//    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Body issue: ParcelableIssue?) : ParcelableIssue
-//    suspend fun updateJiraIssue(@Header("Authorization") encodedAuth: String?, @Query("jql") issue: ParcelableIssue?): JiraIssueResponse
     suspend fun updateJiraIssue(
             @Header("Authorization") encodedAuth: String?,
             @Body issue: ParcelableIssue?,
-            @Path("jiraIssueKey") jiraIssueKey: String
-    ): JiraIssueResponse
+            @Path("jiraIssueKey") jiraIssueKey: String?
+    ): retrofit2.Response<Unit>
 
     //////////////////////////////////////////////////////////
     // ToDo: THIS IS THE BEST EXAMPLE OF WHAT I"M TRYING TO DO: https://stackoverflow.com/questions/66221360/android-make-post-request-with-retrofit

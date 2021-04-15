@@ -9,8 +9,6 @@ import io.davedavis.todora.network.*
 import kotlinx.coroutines.launch
 
 
-//enum class JiraAPIStatus { LOADING, ERROR, DONE }
-
 class HomeViewModel() : ViewModel() {
 
 
@@ -35,7 +33,6 @@ class HomeViewModel() : ViewModel() {
 
     // LiveData for navigating to the selected issue edit fragment.
     private val _navigateToSelectedIssue = MutableLiveData<JiraIssue?>()
-
     val navigateToSelectedIssue: MutableLiveData<JiraIssue?>
         get() = _navigateToSelectedIssue
 

@@ -7,10 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import io.davedavis.todora.R
 import io.davedavis.todora.databinding.FragmentEditBinding
+import io.davedavis.todora.model.JiraAPIStatus
 import io.davedavis.todora.model.PriorityOptions
 import timber.log.Timber
 
@@ -53,45 +56,64 @@ class EditFragment : Fragment() {
         // Set the submit button to disabled until there's a change.
         binding.sumbitIssueButton.isEnabled = false
 
+        // Observe the selectedIssue livedata for changes. If there's a change, enable the button.
+        viewModel.issueEdited.observe(viewLifecycleOwner, {
+            Timber.i("issueEdited Change Detected, enabling submit button. ")
+            binding.sumbitIssueButton.isEnabled = true
 
+        })
+
+
+        // Observe the status of the API request. If it's done, navigate back to the list.
+        viewModel.status.observe(viewLifecycleOwner, {
+            when (it) {
+                JiraAPIStatus.DONE -> {
+                    Timber.i("status observer >>>>> DONE!")
+                    Toast.makeText(context, viewModel.responseMessage, Toast.LENGTH_SHORT).show()
+                    // ToDo: Navigate back to home
+                    this.findNavController().navigate(R.id.nav_home)
+
+                }
+                JiraAPIStatus.ERROR -> {
+                    Timber.i("status observer >>>>> ERROR!")
+                    Toast.makeText(context, viewModel.responseMessage, Toast.LENGTH_SHORT).show()
+
+                }
+                JiraAPIStatus.LOADING -> {
+                    Timber.i("status observer >>>>> LOADING!")
+                    // ToDo: Disable the submit button while sending
+
+                }
+            }
+
+        })
+
+
+        // Set the adapter for the material dropdown.
         val adapter: ArrayAdapter<PriorityOptions> = ArrayAdapter<PriorityOptions>(requireContext(), R.layout.priority_list_item, PriorityOptions.values())
         binding.dropdown.setAdapter(adapter)
-
-
-        // ToDo: LEFT OFF HERE
-        // Set visibility of submit button.
 
         // Set the default state for the adapter.
         binding.dropdown.setText(viewModel.priority.value.toString(), false)
 
-
+        // Set a listener on the dropdown and update the viewmodel payload with the new value.
         binding.dropdown.setOnItemClickListener { parent, view, position, id ->
             viewModel.updatePriority(position)
-            binding.sumbitIssueButton.isEnabled = true
+
         }
 
-
+        // Hide teh keyboard when the edit is done.
         binding.summaryEditText.setOnFocusChangeListener { view, hasFocus ->
             if (!hasFocus) hideKeyboard(view)
-            binding.sumbitIssueButton.isEnabled = true
+
         }
 
         binding.descriptionEditText.setOnFocusChangeListener { view, hasFocus ->
             if (!hasFocus) hideKeyboard(view)
-            binding.sumbitIssueButton.isEnabled = true
+
         }
 
-
-
-
-
-
-
-        viewModel.selectedIssue.observe(viewLifecycleOwner, {
-            Timber.i("Observing successfully !%s", it.toString())
-
-        })
-
+        // If the button us visible, there's an edit to be made. So call the update method.
         binding.sumbitIssueButton.setOnClickListener {
 
             Timber.i("Issue Object !%s", jiraIssueObject.toString())
