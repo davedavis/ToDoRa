@@ -2,10 +2,12 @@ package io.davedavis.todora.ui.home
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import io.davedavis.todora.R
 import io.davedavis.todora.databinding.FragmentHomeBinding
 import io.davedavis.todora.model.Fields
@@ -34,6 +36,47 @@ class HomeFragment : Fragment() {
     ): View? {
 
         val binding = FragmentHomeBinding.inflate(inflater)
+
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val jiraName = sharedPrefs.getString("user_name", null)
+        val jiraEmail = sharedPrefs.getString("user_email", null)
+        val jiraUrl = sharedPrefs.getString("user_project_url", null)
+        val jiraProjectKey = sharedPrefs.getString("user_project_id", null)
+        val jiraApiKey = sharedPrefs.getString("user_api_key", null)
+
+//        PreferenceManager.getDefaultSharedPreferences(context).all.values.clear()
+        Timber.i(
+            "zzzzzzz : " + PreferenceManager.getDefaultSharedPreferences(context).all.containsValue(
+                ""
+            )
+        )
+//        Timber.i("zzzzzzz : " + !PreferenceManager.getDefaultSharedPreferences(context).all.isNullOrEmpty())
+        Timber.i("zzzzzzz : " + jiraName)
+        Timber.i("zzzzzzz : " + jiraEmail)
+        Timber.i("zzzzzzz : " + jiraUrl)
+        Timber.i("zzzzzzz : " + jiraProjectKey)
+        Timber.i("zzzzzzz : " + jiraApiKey)
+
+        if (sharedPrefs.all.containsValue("") || sharedPrefs.all.isNullOrEmpty()) {
+            this.findNavController().navigate(R.id.settings)
+            Timber.i(" >>>>> zzz >>>>> Settings not complete")
+            Toast.makeText(
+                context,
+                "You need to enter all settings to use this app",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+//        if ((jiraName != null) && (jiraEmail != null) && (jiraUrl != null) && (jiraProjectKey != null) && (jiraApiKey != null)) {
+//            Timber.i(" >>>>> XXXXX >>>>> All values were received!")
+//        } else {
+//
+//            this.findNavController().navigate(R.id.settings)
+//            Timber.i(" >>>>> XXXXX >>>>> Settings not complete")
+//            Toast.makeText(context, "You need to enter all your settings", Toast.LENGTH_LONG).show()
+//
+//        }
+
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
         binding.lifecycleOwner = this

@@ -7,9 +7,11 @@ import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import io.davedavis.todora.R
 
+
 class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings, rootKey)
+
 
         // ToDo: Finish validation
         // Let's do some validation. First, let's grab the fields.
@@ -23,22 +25,37 @@ class SettingsFragment : PreferenceFragmentCompat() {
         userEmailField?.setOnPreferenceChangeListener { preference, newValue ->
             // Check that it's a valid email address using the built in android patterns class.
             if (Patterns.EMAIL_ADDRESS.matcher(newValue as CharSequence).matches()) {
-                Toast.makeText(context,
-                        "Valid Email. Setting updated.",
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Valid Email. Setting updated.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 // If it's valid, return true (update the setting)
                 true
             } else {
-                // ToDo: Disable button instead of showing a toast.
-                Toast.makeText(context,
-                        "Invalid Email Address Entered. Setting not updated. Please try again",
-                        Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    context,
+                    "Invalid Email Address Entered. Setting not updated. Please try again",
+                    Toast.LENGTH_LONG
+                ).show()
                 false
             }
         } // End userEmail Validation changelistener.
 
-
-
+        userNameField?.setOnBindEditTextListener { editText -> editText.hint = "Your name. " }
+        userEmailField?.setOnBindEditTextListener { editText ->
+            editText.hint = "Your Jira Login Email"
+        }
+        userProjectUrlField?.setOnBindEditTextListener { editText ->
+            editText.hint =
+                "Your Jira subdomain before the dot. E.g: The 'davedavis' in  https://davedavis.atlassian.net"
+        }
+        userProjectIdField?.setOnBindEditTextListener { editText ->
+            editText.hint = "Your project key where you want todos posted. E.g: TODORA"
+        }
+        userAPIKeyField?.setOnBindEditTextListener { editText ->
+            editText.hint = "Your Jira API Key"
+        }
 
 
     } // End onCreatePreferences

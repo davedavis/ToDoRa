@@ -35,7 +35,7 @@ enum class JiraApiFilter(val value: String) {
 class HostSelectionInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        val jiraSubdomain: String? = SharedPreferencesManager.getUserBaseUrl()
+        val jiraSubdomain: String? = SharedPreferencesManager.getUserBaseUrl() ?: "www"
         val host = "$jiraSubdomain.atlassian.net"
         val newUrl = request.url.newBuilder()
             .host(host)
@@ -52,7 +52,7 @@ class HostSelectionInterceptor: Interceptor {
 
 
 //private const val BASE_URL = "https://davedavis.atlassian.net/rest/api/latest/"
-private const val BASE_URL = "https://davedavis.atlassian.net/rest/api/latest/"
+private const val BASE_URL = "https://www.atlassian.net/rest/api/latest/"
 //private const val BASE_URL = "http://192.168.1.144/"
 
 private val moshi = Moshi.Builder()

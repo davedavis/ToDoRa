@@ -26,7 +26,7 @@ class SharedPreferencesManager {
         fun getUserBaseUrl(): String? {
             return sharedPreferences.getString(
                 applicationContext.getString(R.string.prefs_jira_url_key),
-                "Settings is empty!"
+                "www"
             )!!
         }
 

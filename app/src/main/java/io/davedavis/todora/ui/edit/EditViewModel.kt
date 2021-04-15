@@ -1,7 +1,6 @@
 package io.davedavis.todora.ui.edit
 
 import android.text.Editable
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -65,19 +64,16 @@ class EditViewModel(
     // Thanks https://stackoverflow.com/questions/33798426/how-to-databind-to-ontextchanged-for-an-edittext-on-android
     // ToDo: Move this to the Binding Adapter Class.
     fun onSummaryTextChange(updatedSummary: Editable?) {
-        Log.d("TAG", "New text: ${updatedSummary.toString()}")
         _selectedIssue.value?.fields?.summary = updatedSummary.toString()
         _issueEdited.value = true
     }
 
     fun onDescriptionTextChange(updatedDescription: Editable?) {
-        Log.d("TAG", "New text: ${updatedDescription.toString()}")
         _selectedIssue.value?.fields?.description = updatedDescription.toString()
         _issueEdited.value = true
     }
 
     fun updatePriority(updatedPriority: Int) {
-        Log.d("PRIORITY TEST", PriorityOptions.values()[updatedPriority].toString())
         _selectedIssue.value?.fields?.priority?.name = PriorityOptions.values()[updatedPriority].toString()
         _issueEdited.value = true
 

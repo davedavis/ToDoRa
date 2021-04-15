@@ -12,19 +12,22 @@
             app:title="@string/user_name"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false"
+            app:icon="@drawable/preference_name"
             />
 
         <EditTextPreference
             app:iconSpaceReserved="false"
             app:key="user_email"
             app:title="@string/user_email_address"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+            app:icon="@drawable/preference_email" />
 
         <EditTextPreference
             app:key="user_project_url"
             app:title="@string/user_project_url"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false"
+            app:icon="@drawable/preference_url"
             />
 
         <EditTextPreference
@@ -32,6 +35,7 @@
             app:title="@string/user_project_id"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false"
+            app:icon="@drawable/preference_project"
             />
 
         <EditTextPreference
@@ -39,28 +43,28 @@
             app:title="@string/user_api_key"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false"
-            />
+            app:icon="@drawable/preference_api_key" />
 
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        app:title="@string/app_settings"
-        app:iconSpaceReserved="false">
+    <!--    <PreferenceCategory-->
+    <!--        app:title="@string/app_settings"-->
+    <!--        app:iconSpaceReserved="false">-->
 
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/live_update"
-            app:iconSpaceReserved="false"/>
+    <!--        <SwitchPreferenceCompat-->
+    <!--            app:key="sync"-->
+    <!--            app:title="@string/live_update"-->
+    <!--            app:iconSpaceReserved="false"/>-->
 
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:iconSpaceReserved="false"
-            app:summaryOff="@string/backlog_manual"
-            app:summaryOn="@string/backlog_auto"
-            app:title="@string/backlog_sync" />
+    <!--        <SwitchPreferenceCompat-->
+    <!--            app:dependency="sync"-->
+    <!--            app:key="attachment"-->
+    <!--            app:iconSpaceReserved="false"-->
+    <!--            app:summaryOff="@string/backlog_manual"-->
+    <!--            app:summaryOn="@string/backlog_auto"-->
+    <!--            app:title="@string/backlog_sync" />-->
 
-    </PreferenceCategory>
+    <!--    </PreferenceCategory>-->
 
 </PreferenceScreen>
