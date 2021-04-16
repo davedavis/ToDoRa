@@ -11,6 +11,7 @@ package io.davedavis.todora.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.davedavis.todora.model.NewIssue
 import io.davedavis.todora.model.ParcelableIssue
 import io.davedavis.todora.utils.SharedPreferencesManager
 import okhttp3.Interceptor
@@ -52,7 +53,7 @@ class HostSelectionInterceptor: Interceptor {
 
 
 //private const val BASE_URL = "https://davedavis.atlassian.net/rest/api/latest/"
-private const val BASE_URL = "https://www.atlassian.net/rest/api/latest/"
+private const val BASE_URL = "https://www.atlassian.net/"
 //private const val BASE_URL = "http://192.168.1.144/"
 
 private val moshi = Moshi.Builder()
@@ -88,21 +89,27 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface JiraApiService {
-    //    @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
-    @GET("search")
-    suspend fun getIssues(@Header("Authorization") encodedAuth: String?, @Query("jql") type: String): JiraIssueResponse
+    @GET("rest/api/2/search")
+    suspend fun getIssues(
+        @Header("Authorization") encodedAuth: String?,
+        @Query("jql") type: String
+    ): JiraIssueResponse
 
-    // curl -D-    -u dave@davedavis.io:MpkWzHiXp3QdnrtdSZdqF38A    -X PUT    -H "Content-Type: application/json"
-    // https://davedavis.atlassian.net/rest/api/2/issue/TODORA-10 --data '{ "fields": {"summary": "new summary"} }'
 
-    //    @FormUrlEncoded
-//    @Headers("Content-Type: application/json")
-    @PUT("issue/{jiraIssueKey}")
+    @PUT("rest/api/2/issue/{jiraIssueKey}")
     suspend fun updateJiraIssue(
-            @Header("Authorization") encodedAuth: String?,
-            @Body issue: ParcelableIssue?,
-            @Path("jiraIssueKey") jiraIssueKey: String?
+        @Header("Authorization") encodedAuth: String?,
+        @Body issue: ParcelableIssue?,
+        @Path("jiraIssueKey") jiraIssueKey: String?
     ): retrofit2.Response<Unit>
+
+
+    @POST("rest/api/3/issue")
+    suspend fun newJiraIssue(
+        @Header("Authorization") encodedAuth: String?,
+        @Body issue: NewIssue?
+    ): retrofit2.Response<Unit>
+
 
     //////////////////////////////////////////////////////////
     // ToDo: THIS IS THE BEST EXAMPLE OF WHAT I"M TRYING TO DO: https://stackoverflow.com/questions/66221360/android-make-post-request-with-retrofit
