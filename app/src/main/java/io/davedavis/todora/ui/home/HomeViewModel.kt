@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import io.davedavis.todora.model.JiraAPIStatus
 import io.davedavis.todora.network.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 class HomeViewModel() : ViewModel() {
@@ -41,7 +42,7 @@ class HomeViewModel() : ViewModel() {
      * Call getJiraIssues() on init so we can display issues immediately.
      */
     init {
-        getJiraIssues(JiraApiFilter.SHOW_ALL)
+        getJiraIssues(JiraApiFilter.SHOW_IN_PROGRESS)
     }
 
     /**
@@ -71,6 +72,7 @@ class HomeViewModel() : ViewModel() {
      * @param filter the [JiraApiFilter] that is sent as part of the web server request
      */
     fun updateFilter(filter: JiraApiFilter) {
+        Timber.i(">>>>> UpdateFilter Called!")
         getJiraIssues(filter)
     }
 

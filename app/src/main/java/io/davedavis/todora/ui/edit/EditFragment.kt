@@ -117,7 +117,6 @@ class EditFragment : Fragment() {
         binding.sumbitIssueButton.setOnClickListener {
 
             Timber.i("Issue Object !%s", jiraIssueObject.toString())
-            // ToDo Send the observed issue
             viewModel.updateJiraIssue(jiraIssueKey)
 
         }

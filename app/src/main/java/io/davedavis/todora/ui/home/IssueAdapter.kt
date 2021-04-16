@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import io.davedavis.todora.R
 import io.davedavis.todora.databinding.ListItemBinding
 import io.davedavis.todora.network.JiraIssue
-import java.util.concurrent.TimeUnit
 
 
 class IssueAdapter(private val onClickListener: OnClickListener) :
@@ -24,11 +23,18 @@ class IssueAdapter(private val onClickListener: OnClickListener) :
             binding.issueSummary.text = jiraIssue.fields.summary
             binding.issueDescription.text = jiraIssue.fields.description
             binding.issueDate.text =
-                (jiraIssue.fields.created?.substring(0, 9) ?: '0') as CharSequence?
-            // ToDo: Build a nicer time parser util.
-            binding.issueTime.text = jiraIssue.fields.timespent?.let {
-                TimeUnit.SECONDS.toMinutes(it).toString() + " mins"
-            } ?: "No time logged"
+                (jiraIssue.fields.created?.substring(5, 11) ?: '0') as CharSequence?
+
+//            // ToDo: Build a nicer time parser util.
+//            binding.issueTime.text = jiraIssue.fields.timespent?.let {
+//                TimeUnit.SECONDS.toMinutes(it).toString() + " mins"
+//            } ?: "No time logged"
+
+            if (jiraIssue.fields.timespent?.toInt() ?: 0 > 1) {
+                binding.issueTime.setImageResource(R.drawable.list_view_time_logged)
+
+            }
+
 
             /**
              * Sets the image depending on the priority/severity of the issue.

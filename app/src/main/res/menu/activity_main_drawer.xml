@@ -3,11 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/drawer_home"
             android:title="@string/menu_home" />
+
+        <item
+            android:id="@+id/nav_create"
+            android:icon="@drawable/drawer_create"
+            android:title="@string/create" />
 
         <item
             android:id="@+id/nav_backlog"
@@ -15,15 +22,19 @@
             android:title="@string/backlog" />
 
         <item
-            android:id="@+id/nav_create"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/create" />
-
-        <item
             android:id="@+id/nav_debug"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/debug" />
 
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/drawer_settings"
+            android:title="@string/action_settings" />
 
 
     </group>
