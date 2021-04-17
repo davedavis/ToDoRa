@@ -4,10 +4,15 @@
 //-H "Content-Type: application/json" \
 //https://davedavis.atlassian.net/rest/api/2/search?jql=project="TODORA"
 
+
+// API DOCUMENTATION https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-issueidorkey-put
+
 package io.davedavis.todora.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.davedavis.todora.model.NewIssue
+import io.davedavis.todora.model.ParcelableIssue
 import io.davedavis.todora.utils.SharedPreferencesManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -15,9 +20,7 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
+import retrofit2.http.*
 import java.util.concurrent.TimeUnit
 
 enum class JiraApiFilter(val value: String) {
@@ -33,7 +36,7 @@ enum class JiraApiFilter(val value: String) {
 class HostSelectionInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        val jiraSubdomain: String? = SharedPreferencesManager.getUserBaseUrl()
+        val jiraSubdomain: String? = SharedPreferencesManager.getUserBaseUrl() ?: "www"
         val host = "$jiraSubdomain.atlassian.net"
         val newUrl = request.url.newBuilder()
             .host(host)
@@ -50,7 +53,7 @@ class HostSelectionInterceptor: Interceptor {
 
 
 //private const val BASE_URL = "https://davedavis.atlassian.net/rest/api/latest/"
-private const val BASE_URL = "https://davedavis.atlassian.net/rest/api/latest/"
+private const val BASE_URL = "https://www.atlassian.net/"
 //private const val BASE_URL = "http://192.168.1.144/"
 
 private val moshi = Moshi.Builder()
@@ -69,14 +72,14 @@ private val interceptor = run {
 }
 
 private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(interceptor)
-        .addInterceptor(HostSelectionInterceptor())
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .build()
+    .addInterceptor(interceptor)
+    .addInterceptor(HostSelectionInterceptor())
+    .connectTimeout(5, TimeUnit.SECONDS)
+    .writeTimeout(5, TimeUnit.SECONDS)
+    .readTimeout(5, TimeUnit.SECONDS)
+    .build()
 
-
+// Possible create the client: https://stackoverflow.com/questions/58038917/unable-to-successfully-send-a-post-request-using-retrofit-2-6-1-problems-with
 
 
 private val retrofit = Retrofit.Builder()
@@ -86,9 +89,34 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface JiraApiService {
-//    @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
-    @GET("search")
-    suspend fun getIssues(@Header ("Authorization") encodedAuth: String?, @Query("jql") type: String): JiraIssueResponse
+    @GET("rest/api/2/search")
+    suspend fun getIssues(
+        @Header("Authorization") encodedAuth: String?,
+        @Query("jql") type: String
+    ): JiraIssueResponse
+
+
+    @PUT("rest/api/2/issue/{jiraIssueKey}")
+    suspend fun updateJiraIssue(
+        @Header("Authorization") encodedAuth: String?,
+        @Body issue: ParcelableIssue?,
+        @Path("jiraIssueKey") jiraIssueKey: String?
+    ): retrofit2.Response<Unit>
+
+
+    @POST("rest/api/3/issue")
+    suspend fun newJiraIssue(
+        @Header("Authorization") encodedAuth: String?,
+        @Body issue: NewIssue?
+    ): retrofit2.Response<Unit>
+
+
+    //////////////////////////////////////////////////////////
+    // ToDo: THIS IS THE BEST EXAMPLE OF WHAT I"M TRYING TO DO: https://stackoverflow.com/questions/66221360/android-make-post-request-with-retrofit
+    ////////////////////////////////////////////////////////////
+
+    // https://johncodeos.com/how-to-make-post-get-put-and-delete-requests-with-retrofit-using-kotlin/
+
 }
 
 //interface JiraApiService {

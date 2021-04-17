@@ -1,14 +1,19 @@
 package io.davedavis.todora.ui.home
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.davedavis.todora.R
 import io.davedavis.todora.databinding.ListItemBinding
 import io.davedavis.todora.network.JiraIssue
-import java.util.concurrent.TimeUnit
+import io.davedavis.todora.utils.getTimeAgo
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.*
 
 
 class IssueAdapter(private val onClickListener: OnClickListener) :
@@ -20,15 +25,34 @@ class IssueAdapter(private val onClickListener: OnClickListener) :
      */
     class IssueViewHolder(private var binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(jiraIssue: JiraIssue) {
             binding.issueSummary.text = jiraIssue.fields.summary
             binding.issueDescription.text = jiraIssue.fields.description
-            binding.issueDate.text =
-                (jiraIssue.fields.created?.substring(0, 9) ?: '0') as CharSequence?
-            // ToDo: Build a nicer time parser util.
-            binding.issueTime.text = jiraIssue.fields.timespent?.let {
-                TimeUnit.SECONDS.toMinutes(it).toString() + " mins"
-            } ?: "No time logged"
+
+//            binding.issueDate.text =
+//                (jiraIssue.fields.created?.substring(5, 11) ?: '0') as CharSequence?
+
+//            binding.issueTime.text = jiraIssue.fields.timespent?.let {
+//                TimeUnit.SECONDS.toMinutes(it).toString() + " mins"
+//            } ?: "No time logged"
+
+
+            // Thanks to desugaring: https://developer.android.com/studio/write/java8-support#library-desugaring
+            // and some help: https://stackoverflow.com/questions/35858608/how-to-convert-time-to-time-ago-in-android
+            val dateAgo = LocalDateTime
+                .parse(jiraIssue.fields.created.toString().substring(0, 19))
+                .toLocalDate()
+            val dateView = Date.from(dateAgo.atStartOfDay(ZoneId.systemDefault()).toInstant())
+            val timeAgo = getTimeAgo(dateView)
+
+            binding.issueDate.text = timeAgo
+
+            if (jiraIssue.fields.timespent?.toInt() ?: 0 > 1) {
+                binding.issueTime.setImageResource(R.drawable.list_view_time_logged)
+
+            }
+
 
             /**
              * Sets the image depending on the priority/severity of the issue.
@@ -83,8 +107,10 @@ class IssueAdapter(private val onClickListener: OnClickListener) :
     }
 
     /**
-     * Replaces the contents of a view
+     * Replaces the contents of a view. RequiresAPI is needed as a lint removal. Bind method is
+     * handled by compat libraries, but Android Studio isn't up to date yet.
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: IssueViewHolder, position: Int) {
         val jiraIssue = getItem(position)
         holder.itemView.setOnClickListener {

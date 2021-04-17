@@ -3,12 +3,15 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id "androidx.navigation.safeargs"
+    id 'kotlin-android-extensions'
+
 
 }
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
+
 
     defaultConfig {
         applicationId "io.davedavis.todora"
@@ -34,6 +37,8 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -53,6 +58,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     // For nav controller
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.4'
@@ -82,5 +89,8 @@ dependencies {
 
     // Timber logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // For compatibility with newer time functions
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
 }

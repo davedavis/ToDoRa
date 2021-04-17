@@ -24,15 +24,31 @@ class SharedPreferencesManager {
         }
 
         fun getUserBaseUrl(): String? {
-            return sharedPreferences.getString(applicationContext.getString(R.string.prefs_jira_url_key), "Settings is empty!")!!
+            return sharedPreferences.getString(
+                applicationContext.getString(R.string.prefs_jira_url_key),
+                "www"
+            )!!
         }
 
         fun getUserApiKey(): String? {
-            return sharedPreferences.getString(applicationContext.getString(R.string.prefs_api_key_key), "Settings is empty!")!!
+            return sharedPreferences.getString(
+                applicationContext.getString(R.string.prefs_api_key_key),
+                "Settings is empty!"
+            )!!
         }
 
         fun getUserLogin(): String? {
-            return sharedPreferences.getString(applicationContext.getString(R.string.prefs_jira_email), "Settings is empty!")!!
+            return sharedPreferences.getString(
+                applicationContext.getString(R.string.prefs_jira_email),
+                "Settings is empty!"
+            )!!
+        }
+
+        fun getUserProject(): String? {
+            return sharedPreferences.getString(
+                applicationContext.getString(R.string.prefs_project_id),
+                "Settings is empty!"
+            )!!
         }
     }
 }

@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "summary": "new summary 6",
+    "description": "New Description 6",
+    "priority": {
+      "name": "Low"
+    }
+  }
+}
