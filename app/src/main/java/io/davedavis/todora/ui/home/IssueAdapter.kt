@@ -11,7 +11,6 @@ import io.davedavis.todora.R
 import io.davedavis.todora.databinding.ListItemBinding
 import io.davedavis.todora.network.JiraIssue
 import io.davedavis.todora.utils.getTimeAgo
-import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -39,16 +38,14 @@ class IssueAdapter(private val onClickListener: OnClickListener) :
 //            } ?: "No time logged"
 
 
+            // Thanks to desugaring: https://developer.android.com/studio/write/java8-support#library-desugaring
+            // and some help: https://stackoverflow.com/questions/35858608/how-to-convert-time-to-time-ago-in-android
             val dateAgo = LocalDateTime
                 .parse(jiraIssue.fields.created.toString().substring(0, 19))
                 .toLocalDate()
-
             val dateView = Date.from(dateAgo.atStartOfDay(ZoneId.systemDefault()).toInstant())
-
             val timeAgo = getTimeAgo(dateView)
-            Timber.i("TTTTTTTTTTTTTTTTT : %s", dateAgo)
-            Timber.i("TTTTTTTTTTTTTTTTT : %s", dateView)
-            Timber.i("TTTTTTTTTTTTTTTTT : %s", timeAgo)
+
             binding.issueDate.text = timeAgo
 
             if (jiraIssue.fields.timespent?.toInt() ?: 0 > 1) {
@@ -110,8 +107,10 @@ class IssueAdapter(private val onClickListener: OnClickListener) :
     }
 
     /**
-     * Replaces the contents of a view
+     * Replaces the contents of a view. RequiresAPI is needed as a lint removal. Bind method is
+     * handled by compat libraries, but Android Studio isn't up to date yet.
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: IssueViewHolder, position: Int) {
         val jiraIssue = getItem(position)
         holder.itemView.setOnClickListener {

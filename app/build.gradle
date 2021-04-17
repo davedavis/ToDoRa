@@ -12,6 +12,7 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
+
     defaultConfig {
         applicationId "io.davedavis.todora"
         minSdkVersion 23
@@ -36,6 +37,8 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -86,5 +89,8 @@ dependencies {
 
     // Timber logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // For compatibility with newer time functions
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
 }
