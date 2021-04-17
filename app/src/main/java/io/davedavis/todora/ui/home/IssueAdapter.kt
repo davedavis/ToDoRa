@@ -1,13 +1,20 @@
 package io.davedavis.todora.ui.home
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.davedavis.todora.R
 import io.davedavis.todora.databinding.ListItemBinding
 import io.davedavis.todora.network.JiraIssue
+import io.davedavis.todora.utils.getTimeAgo
+import timber.log.Timber
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.*
 
 
 class IssueAdapter(private val onClickListener: OnClickListener) :
@@ -19,16 +26,30 @@ class IssueAdapter(private val onClickListener: OnClickListener) :
      */
     class IssueViewHolder(private var binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(jiraIssue: JiraIssue) {
             binding.issueSummary.text = jiraIssue.fields.summary
             binding.issueDescription.text = jiraIssue.fields.description
-            binding.issueDate.text =
-                (jiraIssue.fields.created?.substring(5, 11) ?: '0') as CharSequence?
 
-//            // ToDo: Build a nicer time parser util.
+//            binding.issueDate.text =
+//                (jiraIssue.fields.created?.substring(5, 11) ?: '0') as CharSequence?
+
 //            binding.issueTime.text = jiraIssue.fields.timespent?.let {
 //                TimeUnit.SECONDS.toMinutes(it).toString() + " mins"
 //            } ?: "No time logged"
+
+
+            val dateAgo = LocalDateTime
+                .parse(jiraIssue.fields.created.toString().substring(0, 19))
+                .toLocalDate()
+
+            val dateView = Date.from(dateAgo.atStartOfDay(ZoneId.systemDefault()).toInstant())
+
+            val timeAgo = getTimeAgo(dateView)
+            Timber.i("TTTTTTTTTTTTTTTTT : %s", dateAgo)
+            Timber.i("TTTTTTTTTTTTTTTTT : %s", dateView)
+            Timber.i("TTTTTTTTTTTTTTTTT : %s", timeAgo)
+            binding.issueDate.text = timeAgo
 
             if (jiraIssue.fields.timespent?.toInt() ?: 0 > 1) {
                 binding.issueTime.setImageResource(R.drawable.list_view_time_logged)
