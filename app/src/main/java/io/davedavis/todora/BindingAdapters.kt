@@ -48,7 +48,7 @@ fun bindJiraApiStatus(statusImageView: ImageView, status: JiraAPIStatus?) {
     }
 }
 
-// TODO: Continue from here: https://stackoverflow.com/questions/58737505/autocompletetextview-or-spinner-data-binding-in-android
+// Help: https://stackoverflow.com/questions/58737505/autocompletetextview-or-spinner-data-binding-in-android
 // an here: https://gist.github.com/fonix232/6553f66d17746dca5d062eecf40e8b3b
 
 
