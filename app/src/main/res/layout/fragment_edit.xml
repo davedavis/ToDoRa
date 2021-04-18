@@ -33,31 +33,31 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/summaryEditText"
-                    android:text="@{viewModel.selectedIssue.fields.summary}"
-                    android:afterTextChanged="@{(text) -> viewModel.onSummaryTextChange(text)}"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:afterTextChanged="@{(text) -> viewModel.onSummaryTextChange(text)}"
+                    android:text="@{viewModel.selectedIssue.fields.summary}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/description_field"
-                android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Description"
+                android:imeOptions="actionDone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/summary_field">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/descriptionEditText"
-                    android:text="@{viewModel.selectedIssue.fields.description}"
-                    android:afterTextChanged="@{(text) -> viewModel.onDescriptionTextChange(text)}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionDone" />
+                    android:afterTextChanged="@{(text) -> viewModel.onDescriptionTextChange(text)}"
+                    android:imeOptions="actionDone"
+                    android:text="@{viewModel.selectedIssue.fields.description}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,10 +84,10 @@
                 android:id="@+id/menu"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:layout_marginTop="16dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/description_field"
-                android:hint="priority">
+                android:layout_marginTop="16dp"
+                android:hint="priority"
+                app:layout_constraintTop_toBottomOf="@id/description_field">
 
 
                 <AutoCompleteTextView
@@ -111,7 +111,70 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/menu" />
 
+            <Button
+                android:id="@+id/start_log_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="28dp"
+                android:text="Start Loging"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sumbitIssueButton" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Pending TimeLogs"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/start_log_button" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="18/04/2021: 13:45 - 1430 - 45 Mins"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <Button
+                android:id="@+id/submit_timelogs_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Sumbit Pending Time Logs"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+            <Button
+                android:id="@+id/stop_log_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="16dp"
+                android:text="Stop Logging"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </ScrollView>
+
+
 </layout>

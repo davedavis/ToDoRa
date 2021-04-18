@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.davedavis.todora.R
+import io.davedavis.todora.database.TimeLogDatabase
 import io.davedavis.todora.databinding.FragmentEditBinding
 import io.davedavis.todora.model.JiraAPIStatus
 import io.davedavis.todora.model.PriorityOptions
@@ -47,7 +48,14 @@ class EditFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        viewModelFactory = EditViewModelFactory(jiraIssueObject)
+        // Need to get the app context to pass the context to the viewModelFactory
+        val application = requireNotNull(this.activity).application
+
+        // Grab a reference to the DB instance (via the DAO) to pass it to the viewModelFactory too.
+        val dataSource = TimeLogDatabase.getInstance(application).timeLogDatabaseDAO
+
+        viewModelFactory =
+            EditViewModelFactory(dataSource, application, jiraIssueKey, jiraIssueObject)
         viewModel = ViewModelProvider(this, viewModelFactory).get(EditViewModel::class.java)
 
         // Giving the binding access to the EditViewModel
@@ -70,7 +78,7 @@ class EditFragment : Fragment() {
                 JiraAPIStatus.DONE -> {
                     Timber.i("status observer >>>>> DONE!")
                     Toast.makeText(context, viewModel.responseMessage, Toast.LENGTH_SHORT).show()
-                    // ToDo: Navigate back to home
+                    // Navigate back to home
                     this.findNavController().navigate(R.id.nav_home)
 
                 }
@@ -81,8 +89,6 @@ class EditFragment : Fragment() {
                 }
                 JiraAPIStatus.LOADING -> {
                     Timber.i("status observer >>>>> LOADING!")
-                    // ToDo: Disable the submit button while sending
-
                 }
             }
 
@@ -96,7 +102,7 @@ class EditFragment : Fragment() {
         // Set the default state for the adapter.
         binding.dropdown.setText(viewModel.priority.value.toString(), false)
 
-        // Set a listener on the dropdown and update the viewmodel payload with the new value.
+        // Set a listener on the dropdown and update the viewModel payload with the new value.
         binding.dropdown.setOnItemClickListener { parent, view, position, id ->
             viewModel.updatePriority(position)
 
@@ -107,13 +113,12 @@ class EditFragment : Fragment() {
             if (!hasFocus) hideKeyboard(view)
 
         }
-
         binding.descriptionEditText.setOnFocusChangeListener { view, hasFocus ->
             if (!hasFocus) hideKeyboard(view)
 
         }
 
-        // If the button us visible, there's an edit to be made. So call the update method.
+        // If the sbmit changes button is enabled, there's an edit to be made. So call the update method.
         binding.sumbitIssueButton.setOnClickListener {
 
             Timber.i("Issue Object !%s", jiraIssueObject.toString())

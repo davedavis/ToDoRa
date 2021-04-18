@@ -17,9 +17,9 @@ interface TimeLogDatabaseDAO {
 
     // Get all TimeLogs as LiveData so we can filter on a single issue and observe a single set.
     @Query(value = "SELECT * FROM timelog_table WHERE issue_key = :issueKey ")
-    fun getAllIssueTimeLogs(issueKey: String): LiveData<List<TimeLog>>
+    fun getAllIssueTimeLogs(issueKey: String): List<TimeLog>
 
-    // Get all TimeLogs as LiveData so we only have to load it once (V2 "Submit pending" feature)
+    // Get all TimeLogs as LiveData so we only have to load it once (V2 "Submit all pending" feature)
     @Query("SELECT * FROM timelog_table ")
     fun getAllTimeLogs(): LiveData<List<TimeLog>>
 
