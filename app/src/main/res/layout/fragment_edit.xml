@@ -26,7 +26,7 @@
                 android:id="@+id/summary_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Summary"
+                android:hint="@string/summary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Description"
+                android:hint="@string/description"
                 android:imeOptions="actionDone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -61,32 +61,13 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--            <com.google.android.material.textfield.TextInputLayout-->
-            <!--                android:id="@+id/priority_field"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="16dp"-->
-            <!--                android:hint="Priority"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@id/description_field">-->
-
-            <!--                <com.google.android.material.textfield.TextInputEditText-->
-            <!--                    android:id="@+id/priorityEditText"-->
-            <!--                    android:text="@{viewModel.selectedIssue.fields.priority.name}"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content" />-->
-
-            <!--            </com.google.android.material.textfield.TextInputLayout>-->
-
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/menu"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="priority"
+                android:hint="@string/priority"
                 app:layout_constraintTop_toBottomOf="@id/description_field">
 
 
@@ -106,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/roboto_medium"
-                android:text="Submit Changes"
+                android:text="@string/submit_changes"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/menu" />
@@ -117,9 +98,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="28dp"
-                android:text="Start Loging"
+                android:text="@string/start_log"
                 app:layout_constraintStart_toStartOf="parent"
-                android:onClick="@{() -> viewModel.onStartTimeLogTracking()}"
                 app:layout_constraintTop_toBottomOf="@+id/divider" />
 
             <View
@@ -137,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Pending TimeLogs"
+                android:text="@string/pending_timelogs"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/start_log_button" />
@@ -156,10 +136,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Sumbit Pending Time Logs"
+                android:text="@string/submit_pending_time_logs"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:onClick="@{() -> viewModel.submitPendingTimeLogs()}"
                 app:layout_constraintTop_toBottomOf="@+id/pending_timeLogs_textView" />
 
             <Button
@@ -168,9 +147,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="16dp"
-                android:text="Stop Logging"
+                android:text="@string/stop_log"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:onClick="@{() -> viewModel.onStopTimeLogTracking()}"
                 app:layout_constraintTop_toBottomOf="@+id/divider" />
 
 

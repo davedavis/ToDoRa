@@ -14,6 +14,7 @@ import io.davedavis.todora.model.ParcelableIssue
 import io.davedavis.todora.model.PriorityOptions
 import io.davedavis.todora.network.Auth
 import io.davedavis.todora.network.JiraApi
+import io.davedavis.todora.network.JiraIssue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -32,55 +33,76 @@ class EditViewModel(
 ) : AndroidViewModel(application) {
 
 
-    // String to present info to the user
+    /**
+     * String that stores the English only response from the API. Used for
+     * providing more detailed error messages to the user.
+     */
     var responseMessage: String = "No response yet"
 
-    // Set up Room stuff.
+
+    /**
+     * Create a Room Job so we can group everything under it.
+     */
     private var timeLogDbJob = Job()
 
-    // Set up scope for coroutines.
-//    private val ioScope = CoroutineScope(Dispatchers.IO + timeLogDbJob)
 
-    // The issueKey from args as it's not in the parcelable issue.
+    /**
+     * The issueKey from nav args as it's not in the parcelable issue.
+     */
     private var key = issueKey
 
-    // This is livedata, room handles it for us.
-//    private val unsentTimeLogs = database.getAllIssueTimeLogs(key)
 
-
-    // Get un-submitted time logs for the issue if there's any.
-//    private val selectedIssueTimeLogs = database.getAllIssueTimeLogs(key)
-
+    /**
+     * LiveData list of [TimeLog] This is a list of the logs from the database.
+     */
     private val _selectedIssueTimeLogs = MutableLiveData<List<TimeLog>>()
     val selectedIssueTimeLogs: LiveData<List<TimeLog>>
         get() = _selectedIssueTimeLogs
 
 
-    // LiveData of the Parcelable issue (the summary and description Moshi object)
+    /**
+     * LiveData [ParcelableIssue] converted from the  [JiraIssue]. This is a simpler object
+     * used to pass around the selected issue from the fragment as the Moshi API cannot convert
+     * the Jira API to parcelable so we have to do it ourselves. Only contains the summary,
+     * description and key of the object so it can be sent directly when edited using the Retrofit
+     * @Put method.
+     */
     private val _selectedIssue = MutableLiveData<ParcelableIssue>()
     val selectedIssue: LiveData<ParcelableIssue>
         get() = _selectedIssue
 
-    // API status livedata
+    /**
+     * LiveData of the ENUM [JiraAPIStatus] which is used for user feedback during
+     * network operations.
+     */
     private val _status = MutableLiveData<JiraAPIStatus>()
     val status: LiveData<JiraAPIStatus>
         get() = _status
 
-    // The priority livedata
+    /**
+     * LiveData of the ENUM [PriorityOptions] which is used to ensure a user doesn't accidentally
+     * set a priority that Jira doesn't support.
+     */
     private val _priority = MutableLiveData<PriorityOptions>()
     val priority: LiveData<PriorityOptions>
         get() = _priority
 
 
-    // Observable to monitor for any changes so that the button can be enabled. We need this because
-    // the init block creates a new observable instance that can't be monitored from the view/fragment.
+    /**
+     * LiveData observable to monitor for any changes so that the button can be enabled.
+     * We need this because the init block creates a new observable instance that can't be
+     * monitored from the view/fragment. So we create our own so we can enable the buttons
+     * if the issue has any edits.
+     */
     private val _issueEdited = MutableLiveData<Boolean>()
     val issueEdited: LiveData<Boolean>
         get() = _issueEdited
 
 
-
-    // Initialize the _selectedIssue MutableLiveData so that the view can populate the edit fields.
+    /**
+     * Initialize the _selectedIssue MutableLiveData so that the view can populate the edit fields.
+     * Also init the database.
+     */
     init {
 
         _selectedIssue.value = jiraIssueObject
@@ -88,29 +110,7 @@ class EditViewModel(
 
         // Also init the timeLogs for the issue. Will be null if there's no issues logged (hide TV)
         initTimeLogs()
-        Timber.i(
-            "DDDDDDDDDDDDD >> selectedIssueTimeLogs: %s",
-            selectedIssueTimeLogs.value?.get(0)?.issueKey.toString()
-        )
-
     }
-
-
-//    private fun initTimeLogs() {
-//        ioScope.launch {
-//            val testIssue = TimeLog(issueKey = key)
-//            database.insert(testIssue)
-//            val pendingTimeLogs = database.getAllIssueTimeLogs(key)
-//            _selectedIssueTimeLogs.postValue(pendingTimeLogs)
-//            Timber.i("DDDDDDDDDDDDD >> pendingTimeLogs : %s", pendingTimeLogs.get(0).issueKey.toString())
-//
-//
-//            // Get all timelogs for the isue.
-////            _selectedIssueTimeLogs.value = database.getAllIssueTimeLogs(key)
-//        }
-//        Timber.i("DDDDDDDDDDDDD >> selectedIssueTimeLogs: %s", selectedIssueTimeLogs.value?.get(0)?.issueKey.toString())
-//
-//    }
 
 
     private fun initTimeLogs() {
@@ -129,17 +129,29 @@ class EditViewModel(
 
 
     fun submitPendingTimeLogs() {
-//        Timber.i("DDDDDDDDDDDDD >> %s", selectedIssueTimeLogs.value?.get(0)?.startTime.toString())
-//        Timber.i("DDDDDDDDDDDDD >> %s", selectedIssueTimeLogs.value?.get(0)?.endTime.toString())
-//        Timber.i("DDDDDDDDDDDDD >> %s", selectedIssueTimeLogs.value?.get(0)?.issueKey.toString())
-
         for (pendingLog in selectedIssueTimeLogs.value!!)
             Log.i(
                 "DDD >> LOOP :",
                 pendingLog.issueKey + " " + pendingLog.startTime + " " + pendingLog.endTime
             )
 
+        // For now, I'm just going to clear the timelogs to simulate a successful submission.
+        onClearDb()
 
+
+    }
+
+
+    fun onClearDb() {
+        viewModelScope.launch {
+            clearDb()
+        }
+    }
+
+    suspend fun clearDb() {
+        withContext(Dispatchers.IO) {
+            database.clear()
+        }
     }
 
 
@@ -187,9 +199,7 @@ class EditViewModel(
         return withContext(Dispatchers.IO) {
             updatedLog.endTime = System.currentTimeMillis()
             database.update(updatedLog)
-            // I'm cheating a bit here as I ran out of time. Updating the livedata manually.
-//            _selectedIssueTimeLogs.postValue(listOf(updatedLog))
-            // Use the extension function (add) above to notify the observer in the fragment.
+            // Use the operator extension function (add) above to notify the observer in the fragment of the newly recorded time log.
 //            _selectedIssueTimeLogs.add(updatedLog)
             _selectedIssueTimeLogs += updatedLog
 
@@ -233,28 +243,22 @@ class EditViewModel(
                 // ToDo; Extract all these strings
                 when (response.code()) {
                     204 -> {
-                        Timber.i("Request is successful.")
-
                         responseMessage = "Request is successful. Issue Updated"
                         _status.value = JiraAPIStatus.DONE
                     }
                     400 -> {
-                        Timber.i("Body missing, missing permissions on some fields or invalid transition")
                         responseMessage = "Body missing, missing permissions on some fields or invalid transition"
                         _status.value = JiraAPIStatus.ERROR
                     }
                     401 -> {
-                        Timber.i("Authentication credentials are incorrect or missing.")
                         responseMessage = "Authentication credentials are incorrect or missing."
                         _status.value = JiraAPIStatus.ERROR
                     }
                     403 -> {
-                        Timber.i("No Permission to override security screen or hidden fields")
                         responseMessage = "No Permission to override security screen or hidden fields"
                         _status.value = JiraAPIStatus.ERROR
                     }
                     404 -> {
-                        Timber.i("Issue Not Found")
                         responseMessage = "Issue not found. Has it been deleted on the server?."
                         _status.value = JiraAPIStatus.ERROR
                     }

@@ -1,17 +1,13 @@
 package io.davedavis.todora
 
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.davedavis.todora.model.JiraAPIStatus
-import io.davedavis.todora.model.PriorityOptions
 import io.davedavis.todora.network.JiraIssue
 import io.davedavis.todora.network.JiraIssueResponse
 import io.davedavis.todora.ui.home.IssueAdapter
-import timber.log.Timber
 
 
 /**
@@ -54,24 +50,19 @@ fun bindJiraApiStatus(statusImageView: ImageView, status: JiraAPIStatus?) {
 
 // To Set Listner:
 // https://stackoverflow.com/questions/58568335/material-exposed-dropdown-menu-onitemselectedlistener-not-being-called
-@BindingAdapter("priorityOption")
-fun bindPriorityOptions(priorityOption: AutoCompleteTextView, priority: PriorityOptions?) {
-    when (priority) {
-        PriorityOptions.Highest -> {
-//            statusImageView.visibility = View.VISIBLE
-            Timber.i("Highest Selected")
-            priorityOption.setText("TEST")
-
-        }
-        PriorityOptions.High -> {
-            Timber.i("High Selected")
-
-        }
-    }
-}
+//@BindingAdapter("priorityOption")
+//fun bindPriorityOptions(priorityOption: AutoCompleteTextView, priority: PriorityOptions?) {
+//    when (priority) {
+//        PriorityOptions.Highest -> {
+//            priorityOption.setText("TEST")
+//
+//        }
+//        PriorityOptions.High -> {
+//            Timber.i("High Selected")
+//
+//        }
+//    }
 
 
-@BindingAdapter("android:adapter")
-fun setAutoCompleteAdapter(textView: AutoCompleteTextView, adapter: ArrayAdapter<*>) {
-    textView.setAdapter(adapter)
-}
+
+

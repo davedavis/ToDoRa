@@ -40,5 +40,15 @@
     <string name="edit">Edit</string>
     <string name="loading">Loading</string>
     <string name="summary">Summary</string>
+    <string name="no_pending_logs">No Pending Time Logs</string>
+    <string name="submit_pending_time_logs">Submit Pending Time Logs</string>
+    <string name="stop_log">Stop Log</string>
+    <string name="pending_timelogs">Pending TimeLogs</string>
+    <string name="start_log">Start Log</string>
+    <string name="submit_changes">Submit Changes</string>
+    <string name="priority">priority</string>
+    <string name="description">Description</string>
+    <string name="time_tracking_started">Time Tracking Started</string>
+    <string name="timelogs_submitted_message">Timelogs submitted (everything deleted really)</string>
 
 </resources>

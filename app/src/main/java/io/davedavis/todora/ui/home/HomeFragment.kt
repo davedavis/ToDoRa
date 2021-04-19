@@ -66,10 +66,14 @@ class HomeFragment : Fragment() {
             viewModel.displayIssueDetail(it)
         })
 
+        // Set a listener on the fab and navigate to the create fragment.
+        binding.fab.setOnClickListener {
+            this.findNavController().navigate(R.id.nav_create)
+        }
+
         // Observe the navigateToSelectedIssue LiveData and Navigate when it isn't null
         // After navigating, call displayIssueDetailsComplete() so that the ViewModel is ready
         // for another navigation event.
-
         viewModel.navigateToSelectedIssue.observe(viewLifecycleOwner, Observer {
             if (null != it) {
                 Timber.i(it.key)
@@ -79,7 +83,6 @@ class HomeFragment : Fragment() {
                         it.fields.summary.toString(),
                         it.fields.description.toString(),
                         Priority(it.fields.priority.name.toString()),
-//                        it.fields.timespent ?: 0
                     )
                 )
 
@@ -99,13 +102,6 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    /**
-     * Inflates the overflow menu that contains filtering options.
-     */
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        inflater.inflate(R.menu.main, menu)
-//        super.onCreateOptionsMenu(menu, inflater)
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         // Inflate the menu; this adds items to the action bar if it is present.

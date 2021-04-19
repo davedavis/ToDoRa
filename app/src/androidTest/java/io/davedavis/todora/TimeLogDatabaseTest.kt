@@ -65,11 +65,13 @@ class TimeLogDatabaseTest {
 
     @Test
     @Throws(Exception::class)
-    fun insertLiveData() {
+    suspend fun insertLiveData() {
         val timelogEntry = TimeLog(issueKey = "key1")
         timelogDao.insert(timelogEntry)
-        val allTimeLogEntries = timelogDao.getAllIssueTimeLogs("key1")
-        assertEquals(allTimeLogEntries.issueKey, "key1")
+        val allTimeLogEntries = timelogDao.getCurrentTimeLog()
+        if (allTimeLogEntries != null) {
+            assertEquals(allTimeLogEntries.issueKey, "key1")
+        }
 
     }
 

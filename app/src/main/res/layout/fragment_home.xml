@@ -21,8 +21,8 @@
             android:id="@+id/issues_grid"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="6dp"
             android:clipToPadding="false"
+            android:padding="6dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -46,6 +46,18 @@
 
             />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_marginBottom="675dp"
+            app:layout_constraintBottom_toBottomOf="@+id/issues_grid"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/drawer_create" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </layout>
