@@ -85,6 +85,7 @@ class EditFragment : Fragment() {
             }
             // 18/04/2021: 13:45 - 1430 - 45 Mins
             else
+
                 for (timelogEntry in it)
                     binding.pendingTimeLogsTextView.append(
                         timelogEntry.startTime.toString()
@@ -107,6 +108,8 @@ class EditFragment : Fragment() {
         viewModel.selectedIssueTimeLogs.observe(viewLifecycleOwner, {
             Timber.i("Mon. ")
             binding.submitTimelogsButton.isEnabled = !it.isNullOrEmpty()
+            binding.pendingTimeLogsTextView.isVisible = true
+
 
         })
 

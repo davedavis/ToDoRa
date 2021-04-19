@@ -171,7 +171,15 @@ class EditViewModel(
 
     // Extension function to notify observer when a new timelog is added by the user.
     // As it can't be called from inside the IO coroutine.
+    // Mix of solutions from all here: https://stackoverflow.com/questions/47941537/notify-observer-when-item-is-added-to-list-of-livedata
     fun <T> MutableLiveData<List<T>>.add(item: T) {
+        this.postValue(listOf(item))
+    }
+
+
+    // for immutable list
+    operator fun <T> MutableLiveData<List<T>>.plusAssign(item: T) {
+        val value = this.value ?: emptyList()
         this.postValue(listOf(item))
     }
 
@@ -181,7 +189,9 @@ class EditViewModel(
             database.update(updatedLog)
             // I'm cheating a bit here as I ran out of time. Updating the livedata manually.
 //            _selectedIssueTimeLogs.postValue(listOf(updatedLog))
-            _selectedIssueTimeLogs.add(updatedLog)
+            // Use the extension function (add) above to notify the observer in the fragment.
+//            _selectedIssueTimeLogs.add(updatedLog)
+            _selectedIssueTimeLogs += updatedLog
 
         }
 
