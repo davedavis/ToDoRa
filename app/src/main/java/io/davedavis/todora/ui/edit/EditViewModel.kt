@@ -2,6 +2,7 @@ package io.davedavis.todora.ui.edit
 
 import android.app.Application
 import android.text.Editable
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,10 +14,10 @@ import io.davedavis.todora.model.ParcelableIssue
 import io.davedavis.todora.model.PriorityOptions
 import io.davedavis.todora.network.Auth
 import io.davedavis.todora.network.JiraApi
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import timber.log.Timber
 
@@ -30,6 +31,7 @@ class EditViewModel(
     jiraIssueObject: ParcelableIssue,
 ) : AndroidViewModel(application) {
 
+
     // String to present info to the user
     var responseMessage: String = "No response yet"
 
@@ -37,10 +39,14 @@ class EditViewModel(
     private var timeLogDbJob = Job()
 
     // Set up scope for coroutines.
-    private val mainScope = CoroutineScope(Dispatchers.IO + timeLogDbJob)
+//    private val ioScope = CoroutineScope(Dispatchers.IO + timeLogDbJob)
 
     // The issueKey from args as it's not in the parcelable issue.
     private var key = issueKey
+
+    // This is livedata, room handles it for us.
+//    private val unsentTimeLogs = database.getAllIssueTimeLogs(key)
+
 
     // Get un-submitted time logs for the issue if there's any.
 //    private val selectedIssueTimeLogs = database.getAllIssueTimeLogs(key)
@@ -75,25 +81,112 @@ class EditViewModel(
 
 
     // Initialize the _selectedIssue MutableLiveData so that the view can populate the edit fields.
-
     init {
+
         _selectedIssue.value = jiraIssueObject
         _priority.value = PriorityOptions.valueOf(jiraIssueObject.fields?.priority?.name.toString())
 
-        // Also init the timelogs for the issue.
+        // Also init the timeLogs for the issue. Will be null if there's no issues logged (hide TV)
         initTimeLogs()
+        Timber.i(
+            "DDDDDDDDDDDDD >> selectedIssueTimeLogs: %s",
+            selectedIssueTimeLogs.value?.get(0)?.issueKey.toString()
+        )
 
-
-//        private suspend fun
     }
 
 
-    fun initTimeLogs() {
-        mainScope.launch {
-            _selectedIssueTimeLogs.postValue(database.getAllIssueTimeLogs(key))
+//    private fun initTimeLogs() {
+//        ioScope.launch {
+//            val testIssue = TimeLog(issueKey = key)
+//            database.insert(testIssue)
+//            val pendingTimeLogs = database.getAllIssueTimeLogs(key)
+//            _selectedIssueTimeLogs.postValue(pendingTimeLogs)
+//            Timber.i("DDDDDDDDDDDDD >> pendingTimeLogs : %s", pendingTimeLogs.get(0).issueKey.toString())
+//
+//
+//            // Get all timelogs for the isue.
+////            _selectedIssueTimeLogs.value = database.getAllIssueTimeLogs(key)
+//        }
+//        Timber.i("DDDDDDDDDDDDD >> selectedIssueTimeLogs: %s", selectedIssueTimeLogs.value?.get(0)?.issueKey.toString())
+//
+//    }
+
+
+    private fun initTimeLogs() {
+        viewModelScope.launch {
+            _selectedIssueTimeLogs.value = getUnsentTimeLogsFromDb()
         }
-        Timber.i("DBDBDB : %s", selectedIssueTimeLogs.value.toString())
     }
+
+    private suspend fun getUnsentTimeLogsFromDb(): List<TimeLog>? {
+        return withContext(Dispatchers.IO) {
+            val unsentTimeLogs = database.getAllIssueTimeLogs(key)
+            unsentTimeLogs
+        }
+
+    }
+
+
+    fun submitPendingTimeLogs() {
+//        Timber.i("DDDDDDDDDDDDD >> %s", selectedIssueTimeLogs.value?.get(0)?.startTime.toString())
+//        Timber.i("DDDDDDDDDDDDD >> %s", selectedIssueTimeLogs.value?.get(0)?.endTime.toString())
+//        Timber.i("DDDDDDDDDDDDD >> %s", selectedIssueTimeLogs.value?.get(0)?.issueKey.toString())
+
+        for (pendingLog in selectedIssueTimeLogs.value!!)
+            Log.i(
+                "DDD >> LOOP :",
+                pendingLog.issueKey + " " + pendingLog.startTime + " " + pendingLog.endTime
+            )
+
+
+    }
+
+
+    // Inserts a new TmeLog into the DB with the issue key of the issue we're editing.
+    fun onStartTimeLogTracking() {
+        viewModelScope.launch {
+            insertNewTimeLog(TimeLog(issueKey = key))
+
+        }
+    }
+
+    private suspend fun insertNewTimeLog(newLog: TimeLog): Long {
+        return withContext(Dispatchers.IO) {
+            val insertedTimeLogId = database.insert(newLog)
+            insertedTimeLogId
+        }
+
+    }
+
+
+    // Grabs the latest TimeLog created and updates the end_time on it.
+    fun onStopTimeLogTracking() {
+        viewModelScope.launch {
+            database.getCurrentTimeLog()?.let { updateNewTimeLog(it) }
+
+        }
+    }
+
+
+    // Extension function to notify observer when a new timelog is added by the user.
+    // As it can't be called from inside the IO coroutine.
+    fun <T> MutableLiveData<List<T>>.add(item: T) {
+        this.postValue(listOf(item))
+    }
+
+    private suspend fun updateNewTimeLog(updatedLog: TimeLog) {
+        return withContext(Dispatchers.IO) {
+            updatedLog.endTime = System.currentTimeMillis()
+            database.update(updatedLog)
+            // I'm cheating a bit here as I ran out of time. Updating the livedata manually.
+//            _selectedIssueTimeLogs.postValue(listOf(updatedLog))
+            _selectedIssueTimeLogs.add(updatedLog)
+
+        }
+
+    }
+
 
     // Set up the edit fields on changed listeners (Bound in the XML)
     // Thanks https://stackoverflow.com/questions/33798426/how-to-databind-to-ontextchanged-for-an-edittext-on-android

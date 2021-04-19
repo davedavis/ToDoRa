@@ -17,8 +17,8 @@ data class TimeLog(
 
     // Set this as start time initially so we know if there's a difference and if time was logged
     @ColumnInfo(name = "end_time")
-    val endTime: Long = startTime,
+    var endTime: Long = startTime,
 
     @ColumnInfo(name = "issue_key")
-    val issueKey: String = ""
+    val issueKey: String = "no issue key"
 )

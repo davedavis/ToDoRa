@@ -119,6 +119,7 @@
                 android:layout_marginTop="28dp"
                 android:text="Start Loging"
                 app:layout_constraintStart_toStartOf="parent"
+                android:onClick="@{() -> viewModel.onStartTimeLogTracking()}"
                 app:layout_constraintTop_toBottomOf="@+id/divider" />
 
             <View
@@ -132,7 +133,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/sumbitIssueButton" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/timelog_header_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -142,14 +143,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/start_log_button" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/pending_timeLogs_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="18/04/2021: 13:45 - 1430 - 45 Mins"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                app:layout_constraintTop_toBottomOf="@+id/timelog_header_textview" />
 
             <Button
                 android:id="@+id/submit_timelogs_button"
@@ -159,7 +159,8 @@
                 android:text="Sumbit Pending Time Logs"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                android:onClick="@{() -> viewModel.submitPendingTimeLogs()}"
+                app:layout_constraintTop_toBottomOf="@+id/pending_timeLogs_textView" />
 
             <Button
                 android:id="@+id/stop_log_button"
@@ -169,6 +170,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="Stop Logging"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:onClick="@{() -> viewModel.onStopTimeLogTracking()}"
                 app:layout_constraintTop_toBottomOf="@+id/divider" />
 
 

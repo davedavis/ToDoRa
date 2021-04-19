@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -64,10 +65,48 @@ class EditFragment : Fragment() {
         // Set the submit button to disabled until there's a change.
         binding.sumbitIssueButton.isEnabled = false
 
+        // List off the pending time logs into the textView
+        // Observe the selectedIssueTimeLogs livedata for changes. If there's logs, enable submit.
+        //ToDo make this a listview with array.
+        viewModel.selectedIssueTimeLogs.observe(viewLifecycleOwner, {
+            Timber.i("Mon. ")
+            binding.submitTimelogsButton.isEnabled =
+                !viewModel.selectedIssueTimeLogs.value.isNullOrEmpty()
+
+        })
+
+
+        // Observe the selectedIssueTimeLogs livedata for changes. If there's logs, enable submit.
+        viewModel.selectedIssueTimeLogs.observe(viewLifecycleOwner, {
+            Timber.i("Mon. ")
+            if (it.isNullOrEmpty()) {
+                binding.timelogHeaderTextview.text = "No Pending Time Logs"
+                binding.pendingTimeLogsTextView.isVisible = false
+            }
+            // 18/04/2021: 13:45 - 1430 - 45 Mins
+            else
+                for (timelogEntry in it)
+                    binding.pendingTimeLogsTextView.append(
+                        timelogEntry.startTime.toString()
+                            .substring(10, 13) + " - " + timelogEntry.endTime.toString()
+                            .substring(10, 13) + System.lineSeparator()
+                    )
+
+
+        })
+
+
         // Observe the selectedIssue livedata for changes. If there's a change, enable the button.
         viewModel.issueEdited.observe(viewLifecycleOwner, {
             Timber.i("issueEdited Change Detected, enabling submit button. ")
             binding.sumbitIssueButton.isEnabled = true
+
+        })
+
+        // Observe the selectedIssueTimeLogs livedata for changes. If there's logs, enable submit.
+        viewModel.selectedIssueTimeLogs.observe(viewLifecycleOwner, {
+            Timber.i("Mon. ")
+            binding.submitTimelogsButton.isEnabled = !it.isNullOrEmpty()
 
         })
 
@@ -96,8 +135,14 @@ class EditFragment : Fragment() {
 
 
         // Set the adapter for the material dropdown.
-        val adapter: ArrayAdapter<PriorityOptions> = ArrayAdapter<PriorityOptions>(requireContext(), R.layout.priority_list_item, PriorityOptions.values())
+        val adapter: ArrayAdapter<PriorityOptions> = ArrayAdapter<PriorityOptions>(
+            requireContext(),
+            R.layout.priority_list_item,
+            PriorityOptions.values()
+        )
         binding.dropdown.setAdapter(adapter)
+
+        // ToDo: Set up adapter and listview for timelogs.
 
         // Set the default state for the adapter.
         binding.dropdown.setText(viewModel.priority.value.toString(), false)
@@ -108,7 +153,7 @@ class EditFragment : Fragment() {
 
         }
 
-        // Hide teh keyboard when the edit is done.
+        // Hide the keyboard when the edit is done.
         binding.summaryEditText.setOnFocusChangeListener { view, hasFocus ->
             if (!hasFocus) hideKeyboard(view)
 
@@ -118,7 +163,7 @@ class EditFragment : Fragment() {
 
         }
 
-        // If the sbmit changes button is enabled, there's an edit to be made. So call the update method.
+        // If the submit changes button is enabled, there's an edit to be made. So call the update method.
         binding.sumbitIssueButton.setOnClickListener {
 
             Timber.i("Issue Object !%s", jiraIssueObject.toString())

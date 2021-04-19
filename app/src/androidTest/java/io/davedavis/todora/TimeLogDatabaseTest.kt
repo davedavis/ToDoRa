@@ -62,16 +62,16 @@ class TimeLogDatabaseTest {
     }
 
     // LiveData test. Can't figure out how to test liveData.
-//
-//    @Test
-//    @Throws(Exception::class)
-//    fun insertLiveData() {
-//        val timelogEntry = TimeLog(issueKey = "testing time log livedata")
-//        timelogDao.insert(timelogEntry)
-//        val allTimeLogEntries = timelogDao.getAllTimeLogs()
-//        assertEquals(allTimeLogEntries.value?.get(0)?.issueKey, 1)
-//
-//    }
+
+    @Test
+    @Throws(Exception::class)
+    fun insertLiveData() {
+        val timelogEntry = TimeLog(issueKey = "key1")
+        timelogDao.insert(timelogEntry)
+        val allTimeLogEntries = timelogDao.getAllIssueTimeLogs("key1")
+        assertEquals(allTimeLogEntries.issueKey, "key1")
+
+    }
 
 
 }
