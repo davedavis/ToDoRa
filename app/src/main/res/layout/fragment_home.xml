@@ -53,8 +53,11 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:layout_marginBottom="675dp"
+            android:background="@color/primaryColor"
+            android:backgroundTint="@color/primaryColor"
             app:layout_constraintBottom_toBottomOf="@+id/issues_grid"
             app:layout_constraintEnd_toEndOf="parent"
+            app:rippleColor="@color/primaryLightColor"
             app:srcCompat="@drawable/drawer_create" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

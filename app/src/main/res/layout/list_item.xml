@@ -56,7 +56,7 @@
                 android:fontFamily="sans-serif"
                 android:singleLine="true"
                 android:text="This is the title line. Sometimes it's quite large and I"
-                android:textColor="@color/black"
+                android:textColor="@color/primaryDarkColor"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -74,7 +74,7 @@
                 android:fontFamily="sans-serif"
                 android:lines="2"
                 android:singleLine="false"
-                android:textColor="@color/cardview_dark_background"
+                android:textColor="@color/secondaryDarkColor"
                 android:textSize="12sp"
                 tools:text="This is the second line and I'm making some long text so I can see some truncation, especially for the super long ones. " />
         </LinearLayout>
@@ -121,8 +121,10 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/primaryLightColor"
         android:contentDescription="Favourite"
         android:src="@drawable/list_view_no_time"
+        android:tint="@color/primaryLightColor"
         tools:src="@drawable/ic_baseline_access_time_filled_24" />
 
     <View
