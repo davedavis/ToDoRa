@@ -279,6 +279,9 @@ class EditViewModel(
     // https://bladecoder.medium.com/advanced-json-parsing-techniques-using-moshi-and-kotlin-daf56a7b963d
 
 
+    /**
+     * Override the fragment onCleared method to ensure we clean up any coroutines from the job.
+     */
     override fun onCleared() {
         super.onCleared()
         timeLogDbJob.cancel()

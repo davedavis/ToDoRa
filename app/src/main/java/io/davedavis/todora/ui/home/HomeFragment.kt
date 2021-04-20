@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
@@ -74,7 +73,7 @@ class HomeFragment : Fragment() {
         // Observe the navigateToSelectedIssue LiveData and Navigate when it isn't null
         // After navigating, call displayIssueDetailsComplete() so that the ViewModel is ready
         // for another navigation event.
-        viewModel.navigateToSelectedIssue.observe(viewLifecycleOwner, Observer {
+        viewModel.navigateToSelectedIssue.observe(viewLifecycleOwner, {
             if (null != it) {
                 Timber.i(it.key)
 
@@ -116,7 +115,7 @@ class HomeFragment : Fragment() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Timber.i(">>>>>onOPtionsItemSelected Called")
-        var mainActivity: MainActivity = activity as MainActivity
+        val mainActivity: MainActivity = activity as MainActivity
 
         when (item.itemId) {
             R.id.show_backlog -> viewModel.updateFilter(JiraApiFilter.SHOW_BACKLOG)

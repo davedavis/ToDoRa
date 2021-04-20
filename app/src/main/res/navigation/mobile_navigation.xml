@@ -10,16 +10,20 @@
         android:id="@+id/nav_home"
         android:name="io.davedavis.todora.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_nav_home_to_settings"
+            app:destination="@id/settings" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_create"
+            app:destination="@id/nav_create" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_edit"
+            app:destination="@id/nav_edit" />
+    </fragment>
     <action
         android:id="@+id/action_showEdit"
         app:destination="@id/nav_edit" />
-
-    <fragment
-        android:id="@+id/nav_backlog"
-        android:name="io.davedavis.todora.ui.backlog.BacklogFragment"
-        android:label="@string/backlog"
-        tools:layout="@layout/fragment_backlog" />
 
     <fragment
         android:id="@+id/nav_create"

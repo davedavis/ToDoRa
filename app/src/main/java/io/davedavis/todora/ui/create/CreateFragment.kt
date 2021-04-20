@@ -25,7 +25,7 @@ class CreateFragment : Fragment() {
     private lateinit var viewModelFactory: CreateViewModelFactory
 
     fun hideKeyboard(view: View) {
-        view?.apply {
+        view.apply {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
