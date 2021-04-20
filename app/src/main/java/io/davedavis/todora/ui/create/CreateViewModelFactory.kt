@@ -3,7 +3,9 @@ package io.davedavis.todora.ui.create
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-
+/**
+ * This factory isn't actually doing anything custom yet. But it will in V2.
+ */
 class CreateViewModelFactory :
     ViewModelProvider.Factory {
     @Suppress("unchecked_cast")

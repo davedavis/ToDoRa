@@ -7,7 +7,10 @@ import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import io.davedavis.todora.R
 
-
+/**
+ * Creates an instance of the PrefrenceFragmentCompat class to auto save settings in shared
+ * preferences. Validates email and provides hints in a listener when editing each item.
+ */
 class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings, rootKey)

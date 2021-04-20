@@ -20,10 +20,18 @@ import timber.log.Timber
 
 class CreateFragment : Fragment() {
 
-
+    /**
+     * Grab instances of our [CreateViewModel] and [viewModelFactory] so we can build the viewModel
+     * with a factory (we're not actually using it yet in this fragment.
+     */
     private lateinit var viewModel: CreateViewModel
     private lateinit var viewModelFactory: CreateViewModelFactory
 
+    /**
+     * Hide keyboard helper function that hides the keyboard when focus is lost on the edit text
+     * items. Prevents keyboard from staying on screen.
+     * @param view which the system removes input focus from.
+     */
     fun hideKeyboard(view: View) {
         view.apply {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -31,6 +39,10 @@ class CreateFragment : Fragment() {
         }
     }
 
+    /**
+     * IInflates the fragment, databinds it,  sets its lifecycle owner to the OverviewFragment
+     * to enable Data Binding to observe LiveData (for state maintenance)
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

@@ -28,8 +28,9 @@ class HomeFragment : Fragment() {
     }
 
     /**
-     * Inflates the layout with Data Binding, sets its lifecycle owner to the OverviewFragment
-     * to enable Data Binding to observe LiveData, and sets up the RecyclerView with an adapter.
+     * Inflates the layout with Data Binding, sets its lifecycle owner to the Home Fragment
+     * to enable Data Binding to observe LiveData, and sets up the Recycler with a databinding
+     * adapter from the databinding file..
      */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,39 +41,51 @@ class HomeFragment : Fragment() {
         setHasOptionsMenu(true)
 
 
+        /**
+         * Checks that all settings are set, otherwise, navigates to settings fragment.
+         */
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
-
         if (sharedPrefs.all.containsValue("") || sharedPrefs.all.isNullOrEmpty()) {
             this.findNavController().navigate(R.id.settings)
             Timber.i(" >>>>> zzz >>>>> Settings not complete")
             Toast.makeText(
                 context,
-                "You need to enter all settings to use this app",
+                getString(R.string.mandatory_settings_message),
                 Toast.LENGTH_LONG
             ).show()
         }
 
 
-        // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
+        /**
+         * Provides Data Binding to Observe LiveData with the lifecycle of this Fragment
+         */
         binding.lifecycleOwner = this
 
-        // Giving the binding access to the OverviewViewModel
+        /**
+         * Giving the binding access to the HomeViewModel
+         */
         binding.viewModel = viewModel
 
-        // Sets the adapter of the issuesGrid RecyclerView with clickHandler lambda that
-        // tells the viewModel when the property is clicked
+        /**
+         * Sets the adapter of the issuesGrid RecyclerView with clickHandler lambda that
+         * tells the viewModel when the issue is clicked
+         */
         binding.issuesGrid.adapter = IssueAdapter(IssueAdapter.OnClickListener {
             viewModel.displayIssueDetail(it)
         })
 
-        // Set a listener on the fab and navigate to the create fragment.
+        /**
+         * Set a listener on the fab and navigate to the create fragment.
+         */
         binding.fab.setOnClickListener {
             this.findNavController().navigate(R.id.nav_create)
         }
 
-        // Observe the navigateToSelectedIssue LiveData and Navigate when it isn't null
-        // After navigating, call displayIssueDetailsComplete() so that the ViewModel is ready
-        // for another navigation event.
+        /**
+         * Observe the navigateToSelectedIssue LiveData and Navigate when it isn't null
+         * After navigating, call displayIssueDetailsComplete() so that the ViewModel is ready
+         * for another navigation event.
+         */
         viewModel.navigateToSelectedIssue.observe(viewLifecycleOwner, {
             if (null != it) {
                 Timber.i(it.key)
@@ -84,9 +97,6 @@ class HomeFragment : Fragment() {
                         Priority(it.fields.priority.name.toString()),
                     )
                 )
-
-
-
 
                 this.findNavController()
                     .navigate(
@@ -101,16 +111,19 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Inflate the menu; this adds items to the action bar if it is present.
+     * We want this here as it contains filters only applicable to home, not app wide.
+     */
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.main, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
 
     /**
-     * Updates the filter in the [HomeViewModel] when the menu items are selected from the
+     * Updates the filter in the [HomeViewModel] when the filter options are selected from the
      * overflow menu.
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

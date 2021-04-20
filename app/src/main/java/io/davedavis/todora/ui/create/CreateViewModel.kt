@@ -6,18 +6,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.davedavis.todora.model.*
-import io.davedavis.todora.network.Auth
-import io.davedavis.todora.network.JiraApi
+import io.davedavis.todora.network.*
 import io.davedavis.todora.utils.SharedPreferencesManager
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import timber.log.Timber
 
+/**
+ * ViewModel class that holds all the data and logic for the create issue flow.
+ */
 class CreateViewModel : ViewModel() {
 
+    // Response from the API as a string as it's only in English so can't be localized.
     var responseMessage: String = "No response yet"
 
-    // The internal MutableLiveData for the selected property
+    // The internal MutableLiveData for the selected issue
     private val _newIssue = MutableLiveData<NewIssue>()
     val newIssue: LiveData<NewIssue>
         get() = _newIssue
@@ -60,8 +63,11 @@ class CreateViewModel : ViewModel() {
 
 
     // Set up the edit fields on changed listeners (Bound in the XML)
-    // Thanks https://stackoverflow.com/questions/33798426/how-to-databind-to-ontextchanged-for-an-edittext-on-android
-    // ToDo: Move this to the Binding Adapter Class.
+
+    /**
+     * When the description is changed, set the livedata of [newSummary] to the updated value
+     * so when there's a lifecycle change, the user won't lose any input.
+     */
     fun onSummaryTextChange(newSummary: Editable?) {
         _newIssue.value?.fields?.summary = newSummary.toString()
         if (!_newIssue.value?.fields?.description?.content?.get(0)?.content?.get(0)?.actualDescriptionText.isNullOrEmpty()) {
@@ -70,6 +76,10 @@ class CreateViewModel : ViewModel() {
 
     }
 
+    /**
+     * When the description is changed, set the livedata of [newDescription] to the updated value
+     * so when there's a lifecycle change, the user won't lose any input.
+     */
     fun onDescriptionTextChange(newDescription: Editable?) {
         _newIssue.value?.fields?.description?.content?.get(0)?.content?.get(0)?.actualDescriptionText =
             newDescription.toString()
@@ -79,20 +89,28 @@ class CreateViewModel : ViewModel() {
 
     }
 
+    /**
+     * When the issue/to-do is updated, set the [priority] [MutableLiveData]
+     * @param updatedPriority to the updated one in the view.
+     */
     fun updatePriority(updatedPriority: Int) {
         _newIssue.value?.fields?.priority?.name =
             PriorityOptions.values()[updatedPriority].toString()
 
     }
 
-
+    /**
+     * Submits new issue to the [JiraApiService] by calling [newJiraIssue] through a coroutine.
+     * @param filter on the [JiraApiFilter]
+     * @param [newIssue] that goes along with the post request
+     * Returns a string response.
+     */
     fun submitNewJiraIssue() {
         Timber.i(">>> updateJiraIssue in ViewModel Called")
         viewModelScope.launch {
             _status.value = JiraAPIStatus.LOADING
             try {
                 Timber.i(">>> Trying ...")
-                Timber.i(newIssue.value.toString())
                 val response: Response<Unit> = JiraApi.retrofitService.newJiraIssue(
                     Auth.getAuthHeaders(),
                     newIssue.value

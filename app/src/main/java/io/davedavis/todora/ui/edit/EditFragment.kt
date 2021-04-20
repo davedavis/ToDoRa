@@ -23,9 +23,15 @@ import java.util.concurrent.TimeUnit
 
 class EditFragment : Fragment() {
 
+
     private lateinit var viewModel: EditViewModel
     private lateinit var viewModelFactory: EditViewModelFactory
 
+    /**
+     * Hide keyboard helper function that hides the keyboard when focus is lost on the edit text
+     * items. Prevents keyboard from staying on screen.
+     * @param view which the system removes input focus from.
+     */
     fun hideKeyboard(view: View) {
         view.apply {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -33,20 +39,32 @@ class EditFragment : Fragment() {
         }
     }
 
+    /**
+     * Inflates the layout with Data Binding, sets its lifecycle owner to the Home Fragment
+     * to enable Data Binding to observe LiveData, and sets up the editviews and buttons.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        // The editable Jira Issue Object to pass to the ViewModel for display and post/put requests.
+
+        /**
+         * The editable Jira Issue Object to give to the ViewModel for display and post/put requests.
+         */
         val jiraIssueObject = EditFragmentArgs.fromBundle(requireArguments()).parcelableIssueObject
 
-        // The issue Key to pass to the PUT retrofit method. Not included in the issue object as
-        // it's not editable an we don't pass uneditable fields to the API.
+
+        /**
+         * The issue Key to pass to the PUT retrofit method. Not included in the issue object as
+         * it's not editable an we don't pass uneditable fields to the API.
+         */
         val jiraIssueKey = EditFragmentArgs.fromBundle(requireArguments()).issueKey
 
+        /**
+         * Sets up binding and livecycle owner to this fragment.
+         */
         val binding = FragmentEditBinding.inflate(inflater)
-
         binding.lifecycleOwner = this
 
         // Need to get the app context to pass the context to the viewModelFactory
@@ -55,6 +73,13 @@ class EditFragment : Fragment() {
         // Grab a reference to the DB instance (via the DAO) to pass it to the viewModelFactory too.
         val dataSource = TimeLogDatabase.getInstance(application).timeLogDatabaseDAO
 
+        /**
+         * Create the viewModel by using a factory and giving it the
+         * @param dataSource which is an instance of [TimeLogDatabase]
+         * @param application which is an instance of the application[Context]
+         * @param jiraIssueKey which is a string received from the bundle
+         * @param jiraIssueObject which is the actual serialized object Retrofit can send.
+         */
         viewModelFactory =
             EditViewModelFactory(dataSource, application, jiraIssueKey, jiraIssueObject)
         viewModel = ViewModelProvider(this, viewModelFactory).get(EditViewModel::class.java)
@@ -69,16 +94,17 @@ class EditFragment : Fragment() {
         binding.stopLogButton.isEnabled = false
 
 
-        // Observe the selectedIssueTimeLogs livedata for changes. If there's logs, enable submit.
+        /**
+         * Observe the selectedIssueTimeLogs livedata for changes. If there's logs, enable submit.
+         * This currently only updates the view and doesn't actually submit the timelogs.
+         */
         viewModel.selectedIssueTimeLogs.observe(viewLifecycleOwner, {
 
             binding.submitTimelogsButton.isEnabled = !it.isNullOrEmpty()
 
             if (it.isNullOrEmpty()) {
                 binding.timelogHeaderTextview.text = getString(R.string.no_pending_logs)
-            }
-            // 18/04/2021: 13:45 - 1430 - 45 Mins
-            else
+            } else
                 for (timelogEntry in it)
 
                 // Displaying as seconds here so it can be tested easily without waiting.
@@ -92,12 +118,14 @@ class EditFragment : Fragment() {
                                 System.lineSeparator()
                     )
 
-
         })
 
 
-        // If the submit changes button is enabled, there's an edit to be made.
-        // So call the update method.
+        /**
+         * If the submit changes button is enabled, there's an edit to be made.
+         * So call the update method.
+         */
+
         binding.startLogButton.setOnClickListener {
             viewModel.onStartTimeLogTracking()
             Toast.makeText(context, getString(R.string.time_tracking_started), Toast.LENGTH_SHORT)

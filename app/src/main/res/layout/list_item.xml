@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
+<!-- List item layout for the recyclerview. -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="property"
-            type="io.davedavis.todora.network.JiraIssue" />
-    </data>
 
 <RelativeLayout
 
@@ -29,8 +21,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="20dp"
-        android:contentDescription="@string/sample_priority" />
-    <!--    android:background = "@drawable/highest"-->
+        android:contentDescription="@string/priority" />
 
 
     <LinearLayout
