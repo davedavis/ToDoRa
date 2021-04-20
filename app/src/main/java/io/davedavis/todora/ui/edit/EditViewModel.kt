@@ -2,7 +2,6 @@ package io.davedavis.todora.ui.edit
 
 import android.app.Application
 import android.text.Editable
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -119,7 +118,7 @@ class EditViewModel(
         }
     }
 
-    private suspend fun getUnsentTimeLogsFromDb(): List<TimeLog>? {
+    private suspend fun getUnsentTimeLogsFromDb(): List<TimeLog> {
         return withContext(Dispatchers.IO) {
             val unsentTimeLogs = database.getAllIssueTimeLogs(key)
             unsentTimeLogs
@@ -130,11 +129,6 @@ class EditViewModel(
 
     fun submitPendingTimeLogs() {
         for (pendingLog in selectedIssueTimeLogs.value!!)
-            Log.i(
-                "DDD >> LOOP :",
-                pendingLog.issueKey + " " + pendingLog.startTime + " " + pendingLog.endTime
-            )
-
         // For now, I'm just going to clear the timelogs to simulate a successful submission.
         onClearDb()
 
@@ -148,7 +142,7 @@ class EditViewModel(
         }
     }
 
-    suspend fun clearDb() {
+    private suspend fun clearDb() {
         withContext(Dispatchers.IO) {
             database.clear()
         }
@@ -188,10 +182,9 @@ class EditViewModel(
         this.postValue(listOf(item))
     }
 
-
-    // for immutable list
+    // Variation that's neater.
     operator fun <T> MutableLiveData<List<T>>.plusAssign(item: T) {
-        val value = this.value ?: emptyList()
+        //val value = this.value ?: emptyList()
         this.postValue(listOf(item))
     }
 

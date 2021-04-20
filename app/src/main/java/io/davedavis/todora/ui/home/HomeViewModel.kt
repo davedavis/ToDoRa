@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-class HomeViewModel() : ViewModel() {
+class HomeViewModel : ViewModel() {
 
 
     /**

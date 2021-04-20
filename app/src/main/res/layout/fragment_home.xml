@@ -38,13 +38,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:backgroundTint="@color/primaryColor"
+            android:contentDescription="@string/loading"
+            app:jiraApiStatus="@{viewModel.status}"
             app:layout_constraintBottom_toBottomOf="parent"
+
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:jiraApiStatus="@{viewModel.status}"
-
-            />
+            app:tint="@color/primaryColor" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -55,6 +57,7 @@
             android:layout_marginBottom="675dp"
             android:background="@color/primaryColor"
             android:backgroundTint="@color/primaryColor"
+            android:contentDescription="@string/create"
             app:layout_constraintBottom_toBottomOf="@+id/issues_grid"
             app:layout_constraintEnd_toEndOf="parent"
             app:rippleColor="@color/primaryLightColor"

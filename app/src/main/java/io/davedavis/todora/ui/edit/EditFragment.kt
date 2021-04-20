@@ -33,9 +33,9 @@ class EditFragment : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
         // The editable Jira Issue Object to pass to the ViewModel for display and post/put requests.
         val jiraIssueObject = EditFragmentArgs.fromBundle(requireArguments()).parcelableIssueObject
@@ -73,10 +73,6 @@ class EditFragment : Fragment() {
 
             binding.submitTimelogsButton.isEnabled = !it.isNullOrEmpty()
 
-
-//            binding.submitTimelogsButton.isEnabled =
-//                !viewModel.selectedIssueTimeLogs.value.isNullOrEmpty()
-
             if (it.isNullOrEmpty()) {
                 binding.timelogHeaderTextview.text = getString(R.string.no_pending_logs)
             }
@@ -93,7 +89,8 @@ class EditFragment : Fragment() {
         })
 
 
-        // If the submit changes button is enabled, there's an edit to be made. So call the update method.
+        // If the submit changes button is enabled, there's an edit to be made.
+        // So call the update method.
         binding.startLogButton.setOnClickListener {
             viewModel.onStartTimeLogTracking()
             Toast.makeText(context, getString(R.string.time_tracking_started), Toast.LENGTH_SHORT)
@@ -104,6 +101,7 @@ class EditFragment : Fragment() {
 
         }
 
+        // set onclick listeners and hide/show relevant buttons.
         binding.stopLogButton.setOnClickListener {
             viewModel.onStopTimeLogTracking()
             binding.stopLogButton.isEnabled = false
@@ -119,14 +117,6 @@ class EditFragment : Fragment() {
             binding.sumbitIssueButton.isEnabled = true
 
         })
-
-//        // Observe the selectedIssueTimeLogs livedata for changes. If there's logs, enable submit.
-//        viewModel.selectedIssueTimeLogs.observe(viewLifecycleOwner, {
-//            binding.submitTimelogsButton.isEnabled = !it.isNullOrEmpty()
-////            binding.pendingTimeLogsTextView.isVisible = true
-//
-//
-//        })
 
 
         // Observe the status of the API request. If it's done, navigate back to the list.
@@ -196,6 +186,7 @@ class EditFragment : Fragment() {
             binding.submitTimelogsButton.isEnabled = false
             binding.pendingTimeLogsTextView.isVisible = false
             binding.timelogHeaderTextview.text = getString(R.string.no_pending_logs)
+            viewModel.submitPendingTimeLogs()
             Toast.makeText(
                 context,
                 getString(R.string.timelogs_submitted_message),
