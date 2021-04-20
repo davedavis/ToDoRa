@@ -25,7 +25,7 @@ class CreateFragment : Fragment() {
     private lateinit var viewModelFactory: CreateViewModelFactory
 
     fun hideKeyboard(view: View) {
-        view?.apply {
+        view.apply {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
@@ -34,7 +34,7 @@ class CreateFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
 
         val binding = FragmentCreateBinding.inflate(inflater)
@@ -79,6 +79,7 @@ class CreateFragment : Fragment() {
                     // ToDo: Disable the submit button while sending
 
                 }
+
             }
 
         })
@@ -113,7 +114,7 @@ class CreateFragment : Fragment() {
 
         }
 
-        // If the button is visible, it's valud and can be submitted.
+        // If the button is visible, it's valid and can be submitted.
         binding.sumbitIssueButton.setOnClickListener {
 
             viewModel.submitNewJiraIssue()

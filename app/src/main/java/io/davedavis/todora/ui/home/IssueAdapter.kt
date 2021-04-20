@@ -1,9 +1,7 @@
 package io.davedavis.todora.ui.home
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,21 +23,14 @@ class IssueAdapter(private val onClickListener: OnClickListener) :
      */
     class IssueViewHolder(private var binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(jiraIssue: JiraIssue) {
             binding.issueSummary.text = jiraIssue.fields.summary
             binding.issueDescription.text = jiraIssue.fields.description
 
-//            binding.issueDate.text =
-//                (jiraIssue.fields.created?.substring(5, 11) ?: '0') as CharSequence?
-
-//            binding.issueTime.text = jiraIssue.fields.timespent?.let {
-//                TimeUnit.SECONDS.toMinutes(it).toString() + " mins"
-//            } ?: "No time logged"
-
 
             // Thanks to desugaring: https://developer.android.com/studio/write/java8-support#library-desugaring
             // and some help: https://stackoverflow.com/questions/35858608/how-to-convert-time-to-time-ago-in-android
+            // And here: https://www.programiz.com/kotlin-programming/examples/string-date
             val dateAgo = LocalDateTime
                 .parse(jiraIssue.fields.created.toString().substring(0, 19))
                 .toLocalDate()
@@ -110,7 +101,6 @@ class IssueAdapter(private val onClickListener: OnClickListener) :
      * Replaces the contents of a view. RequiresAPI is needed as a lint removal. Bind method is
      * handled by compat libraries, but Android Studio isn't up to date yet.
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: IssueViewHolder, position: Int) {
         val jiraIssue = getItem(position)
         holder.itemView.setOnClickListener {

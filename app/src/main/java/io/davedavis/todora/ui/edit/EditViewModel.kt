@@ -1,16 +1,23 @@
 package io.davedavis.todora.ui.edit
 
+import android.app.Application
 import android.text.Editable
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.davedavis.todora.database.TimeLog
+import io.davedavis.todora.database.TimeLogDatabaseDAO
 import io.davedavis.todora.model.JiraAPIStatus
 import io.davedavis.todora.model.ParcelableIssue
 import io.davedavis.todora.model.PriorityOptions
 import io.davedavis.todora.network.Auth
 import io.davedavis.todora.network.JiraApi
+import io.davedavis.todora.network.JiraIssue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import timber.log.Timber
 
@@ -18,44 +25,178 @@ import timber.log.Timber
 
 
 class EditViewModel(
+    val database: TimeLogDatabaseDAO,
+    application: Application,
+    issueKey: String,
     jiraIssueObject: ParcelableIssue,
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
+
+    /**
+     * String that stores the English only response from the API. Used for
+     * providing more detailed error messages to the user.
+     */
     var responseMessage: String = "No response yet"
 
-    // The internal MutableLiveData for the selected property
+
+    /**
+     * Create a Room Job so we can group everything under it.
+     */
+    private var timeLogDbJob = Job()
+
+
+    /**
+     * The issueKey from nav args as it's not in the parcelable issue.
+     */
+    private var key = issueKey
+
+
+    /**
+     * LiveData list of [TimeLog] This is a list of the logs from the database.
+     */
+    private val _selectedIssueTimeLogs = MutableLiveData<List<TimeLog>>()
+    val selectedIssueTimeLogs: LiveData<List<TimeLog>>
+        get() = _selectedIssueTimeLogs
+
+
+    /**
+     * LiveData [ParcelableIssue] converted from the  [JiraIssue]. This is a simpler object
+     * used to pass around the selected issue from the fragment as the Moshi API cannot convert
+     * the Jira API to parcelable so we have to do it ourselves. Only contains the summary,
+     * description and key of the object so it can be sent directly when edited using the Retrofit
+     * @Put method.
+     */
     private val _selectedIssue = MutableLiveData<ParcelableIssue>()
     val selectedIssue: LiveData<ParcelableIssue>
         get() = _selectedIssue
 
-    // The internal MutableLiveData that stores the status of the API request
+    /**
+     * LiveData of the ENUM [JiraAPIStatus] which is used for user feedback during
+     * network operations.
+     */
     private val _status = MutableLiveData<JiraAPIStatus>()
     val status: LiveData<JiraAPIStatus>
         get() = _status
 
-    // The internal MutableLiveData that stores the status of the most recent request
+    /**
+     * LiveData of the ENUM [PriorityOptions] which is used to ensure a user doesn't accidentally
+     * set a priority that Jira doesn't support.
+     */
     private val _priority = MutableLiveData<PriorityOptions>()
     val priority: LiveData<PriorityOptions>
         get() = _priority
 
 
-    // Observable to monitor for any changes so that the button can be enabled. We need this because
-    // the init block creates a new observable instance that can't be monitored from the view/fragment.
+    /**
+     * LiveData observable to monitor for any changes so that the button can be enabled.
+     * We need this because the init block creates a new observable instance that can't be
+     * monitored from the view/fragment. So we create our own so we can enable the buttons
+     * if the issue has any edits.
+     */
     private val _issueEdited = MutableLiveData<Boolean>()
     val issueEdited: LiveData<Boolean>
         get() = _issueEdited
 
-    // ToDo Remove this
-    // The internal MutableLiveData that stores the status of the API request
-    private val _updateResponse = MutableLiveData<String>()
-    val updateResponse: MutableLiveData<String>
-        get() = _updateResponse
 
-
-    // Initialize the _selectedIssue MutableLiveData so that the view can populate the edit fields.
+    /**
+     * Initialize the _selectedIssue MutableLiveData so that the view can populate the edit fields.
+     * Also init the database.
+     */
     init {
+
         _selectedIssue.value = jiraIssueObject
         _priority.value = PriorityOptions.valueOf(jiraIssueObject.fields?.priority?.name.toString())
+
+        // Also init the timeLogs for the issue. Will be null if there's no issues logged (hide TV)
+        initTimeLogs()
+    }
+
+
+    private fun initTimeLogs() {
+        viewModelScope.launch {
+            _selectedIssueTimeLogs.value = getUnsentTimeLogsFromDb()
+        }
+    }
+
+    private suspend fun getUnsentTimeLogsFromDb(): List<TimeLog> {
+        return withContext(Dispatchers.IO) {
+            val unsentTimeLogs = database.getAllIssueTimeLogs(key)
+            unsentTimeLogs
+        }
+
+    }
+
+
+    fun submitPendingTimeLogs() {
+        for (pendingLog in selectedIssueTimeLogs.value!!)
+        // For now, I'm just going to clear the timelogs to simulate a successful submission.
+        onClearDb()
+
+
+    }
+
+
+    fun onClearDb() {
+        viewModelScope.launch {
+            clearDb()
+        }
+    }
+
+    private suspend fun clearDb() {
+        withContext(Dispatchers.IO) {
+            database.clear()
+        }
+    }
+
+
+    // Inserts a new TmeLog into the DB with the issue key of the issue we're editing.
+    fun onStartTimeLogTracking() {
+        viewModelScope.launch {
+            insertNewTimeLog(TimeLog(issueKey = key))
+
+        }
+    }
+
+    private suspend fun insertNewTimeLog(newLog: TimeLog): Long {
+        return withContext(Dispatchers.IO) {
+            val insertedTimeLogId = database.insert(newLog)
+            insertedTimeLogId
+        }
+
+    }
+
+
+    // Grabs the latest TimeLog created and updates the end_time on it.
+    fun onStopTimeLogTracking() {
+        viewModelScope.launch {
+            database.getCurrentTimeLog()?.let { updateNewTimeLog(it) }
+
+        }
+    }
+
+
+    // Extension function to notify observer when a new timelog is added by the user.
+    // As it can't be called from inside the IO coroutine.
+    // Mix of solutions from all here: https://stackoverflow.com/questions/47941537/notify-observer-when-item-is-added-to-list-of-livedata
+    fun <T> MutableLiveData<List<T>>.add(item: T) {
+        this.postValue(listOf(item))
+    }
+
+    // Variation that's neater.
+    operator fun <T> MutableLiveData<List<T>>.plusAssign(item: T) {
+        //val value = this.value ?: emptyList()
+        this.postValue(listOf(item))
+    }
+
+    private suspend fun updateNewTimeLog(updatedLog: TimeLog) {
+        return withContext(Dispatchers.IO) {
+            updatedLog.endTime = System.currentTimeMillis()
+            database.update(updatedLog)
+            // Use the operator extension function (add) above to notify the observer in the fragment of the newly recorded time log.
+//            _selectedIssueTimeLogs.add(updatedLog)
+            _selectedIssueTimeLogs += updatedLog
+
+        }
 
     }
 
@@ -80,8 +221,6 @@ class EditViewModel(
     }
 
 
-
-
     fun updateJiraIssue(jiraIssueKey: String) {
         Timber.i(">>> updateJiraIssue in ViewModel Called")
         viewModelScope.launch {
@@ -97,29 +236,22 @@ class EditViewModel(
                 // ToDo; Extract all these strings
                 when (response.code()) {
                     204 -> {
-                        Timber.i("Request is successful.")
-
                         responseMessage = "Request is successful. Issue Updated"
-                        Timber.i("From ViewModel" + updateResponse.value)
                         _status.value = JiraAPIStatus.DONE
                     }
                     400 -> {
-                        Timber.i("Body missing, missing permissions on some fields or invalid transition")
                         responseMessage = "Body missing, missing permissions on some fields or invalid transition"
                         _status.value = JiraAPIStatus.ERROR
                     }
                     401 -> {
-                        Timber.i("Authentication credentials are incorrect or missing.")
                         responseMessage = "Authentication credentials are incorrect or missing."
                         _status.value = JiraAPIStatus.ERROR
                     }
                     403 -> {
-                        Timber.i("No Permission to override security screen or hidden fields")
                         responseMessage = "No Permission to override security screen or hidden fields"
                         _status.value = JiraAPIStatus.ERROR
                     }
                     404 -> {
-                        Timber.i("Issue Not Found")
                         responseMessage = "Issue not found. Has it been deleted on the server?."
                         _status.value = JiraAPIStatus.ERROR
                     }
@@ -128,7 +260,8 @@ class EditViewModel(
 
             } catch (e: Exception) {
                 Timber.i(">>> Exception %s", e.toString())
-                responseMessage = "I don't know how to handle this error. Please report to owner : $e"
+                responseMessage =
+                    "I don't know how to handle this error. Please report to owner : $e"
                 _status.value = JiraAPIStatus.ERROR
             }
         }
@@ -137,4 +270,15 @@ class EditViewModel(
 
     //ToDo: Share livedata between fragments.
     // https://bladecoder.medium.com/advanced-json-parsing-techniques-using-moshi-and-kotlin-daf56a7b963d
+
+
+    /**
+     * Override the fragment onCleared method to ensure we clean up any coroutines from the job.
+     */
+    override fun onCleared() {
+        super.onCleared()
+        timeLogDbJob.cancel()
+    }
+
+
 }

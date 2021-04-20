@@ -21,13 +21,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
 
-//        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-//            with (sharedPrefs.edit()) {
-//                putString(getString(R.string.prefs_jira_url_key), null)
-//                apply()
-//            }
-
-
         setContentView(R.layout.activity_main)
 
 
@@ -46,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home,
-                R.id.nav_backlog,
                 R.id.nav_create,
                 R.id.settings
             ), drawerLayout
@@ -59,27 +51,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        menuInflater.inflate(R.menu.main, menu)
-//        return true
-//    }
-//
-//    // https://stackoverflow.com/questions/59586207/androidx-preferences-and-navigation
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.show_backlog ->  HomeViewModel.
-//            R.id.show_selected -> Timber.i("Selected Selected")
-//            else -> Timber.i("Something Else Selected")
-//        }
-//
-//        // If the settings item is selected, navigate to the settings fragment.
-//        val navController = findNavController(R.id.nav_host_fragment)
-//        return NavigationUI.onNavDestinationSelected(item, navController)
-//                || super.onOptionsItemSelected(item)
-//
-//
-//    }
 
     // Need to define a method on the activity to open the drawer so we can use the overflow for
     // filtering and not overwrite the onOptionsSelected calls.
