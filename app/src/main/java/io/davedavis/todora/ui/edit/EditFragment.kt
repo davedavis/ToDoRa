@@ -18,6 +18,7 @@ import io.davedavis.todora.databinding.FragmentEditBinding
 import io.davedavis.todora.model.JiraAPIStatus
 import io.davedavis.todora.model.PriorityOptions
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 
 class EditFragment : Fragment() {
@@ -79,10 +80,16 @@ class EditFragment : Fragment() {
             // 18/04/2021: 13:45 - 1430 - 45 Mins
             else
                 for (timelogEntry in it)
+
+                // Displaying as seconds here so it can be tested easily without waiting.
                     binding.pendingTimeLogsTextView.append(
-                        timelogEntry.startTime.toString()
-                            .substring(10, 13) + " - " + timelogEntry.endTime.toString()
-                            .substring(10, 13) + System.lineSeparator()
+                        (TimeUnit.MILLISECONDS.toSeconds
+                            (timelogEntry.endTime - timelogEntry.startTime)
+                                )
+                            .toString() +
+                                " - " +
+                                getString(R.string.seconds) +
+                                System.lineSeparator()
                     )
 
 
