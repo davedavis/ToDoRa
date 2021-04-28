@@ -32,7 +32,7 @@ class CreateFragment : Fragment() {
      * items. Prevents keyboard from staying on screen.
      * @param view which the system removes input focus from.
      */
-    fun hideKeyboard(view: View) {
+    private fun hideKeyboard(view: View) {
         view.apply {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)

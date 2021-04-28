@@ -37,7 +37,7 @@ enum class JiraApiFilter(val value: String) {
 class HostSelectionInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        val jiraSubdomain: String? = SharedPreferencesManager.getUserBaseUrl() ?: "www"
+        val jiraSubdomain: String = SharedPreferencesManager.getUserBaseUrl() ?: "www"
         val host = "$jiraSubdomain.atlassian.net"
         val newUrl = request.url.newBuilder()
             .host(host)

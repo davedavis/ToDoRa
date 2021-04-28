@@ -1,24 +1,11 @@
 package io.davedavis.todora.utils
 
-import android.content.Context
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import java.util.*
 
 private const val SECOND_MILLIS = 1000
 private const val MINUTE_MILLIS = 60 * SECOND_MILLIS
 private const val HOUR_MILLIS = 60 * MINUTE_MILLIS
 private const val DAY_MILLIS = 24 * HOUR_MILLIS
-
-class MiscUtils {
-
-    fun View.hideKeyboard() {
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(windowToken, 0)
-    }
-
-
-}
 
 
 //https://stackoverflow.com/questions/35858608/how-to-convert-time-to-time-ago-in-android
@@ -49,10 +36,3 @@ fun getTimeAgo(date: Date): String {
         else -> "${diff / DAY_MILLIS} days ago"
     }
 }
-
-
-
-
-
-
-

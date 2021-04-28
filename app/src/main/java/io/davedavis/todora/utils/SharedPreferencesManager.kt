@@ -15,8 +15,8 @@ import io.davedavis.todora.R
 class SharedPreferencesManager {
     companion object {
 
-        lateinit var sharedPreferences: SharedPreferences
-        lateinit var applicationContext: Context
+        private lateinit var sharedPreferences: SharedPreferences
+        private lateinit var applicationContext: Context
 
         fun init(context: Context) {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

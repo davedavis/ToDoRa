@@ -15,7 +15,10 @@ import io.davedavis.todora.model.WorkLog
 import io.davedavis.todora.network.Auth
 import io.davedavis.todora.network.JiraApi
 import io.davedavis.todora.network.JiraIssue
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import timber.log.Timber
 import java.time.Instant
@@ -28,7 +31,7 @@ import java.util.concurrent.TimeUnit
 
 
 class EditViewModel(
-    val database: TimeLogDatabaseDAO,
+    private val database: TimeLogDatabaseDAO,
     application: Application,
     issueKey: String,
     jiraIssueObject: ParcelableIssue,
@@ -143,17 +146,17 @@ class EditViewModel(
                         selectedIssueTimeLogs.value.toString()
                     )
 
-                    var timeInSecs: Int =
+                    val timeInSecs: Int =
                         (TimeUnit.MILLISECONDS.toSeconds(pendingLog.endTime - pendingLog.startTime)).toInt()
                     val formatter =
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS" + "+0000");
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS" + "+0000")
 
                     // JVM representation of a millisecond epoch absolute instant
                     val instant = Instant.ofEpochMilli(pendingLog.startTime)
 
                     // Adding the timezone information to be able to format it (change accordingly)
                     val date = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
-                    var startedAt: String = formatter.format(date)
+                    val startedAt: String = formatter.format(date)
 
                     Timber.i(">>> TimeLog timeInSecs submitted is %s", timeInSecs.toString())
                     Timber.i(">>> TimeLog started at string submitted is %s", startedAt)
@@ -209,70 +212,6 @@ class EditViewModel(
 
     }
 
-    // ToDo: Delete this messy version.
-    fun sumbmitPendingWorklogs() {
-
-        viewModelScope.launch {
-
-            withContext(Dispatchers.Main) {
-
-                coroutineScope {
-                    selectedIssueTimeLogs.value?.forEach { timeLogToSubmit ->
-                        launch { // this will allow us to run multiple tasks in parallel
-                            var timeInSecs: Int =
-                                (TimeUnit.MILLISECONDS.toSeconds(timeLogToSubmit.endTime - timeLogToSubmit.startTime)).toInt()
-                            val formatter =
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS" + "+0000");
-
-                            // JVM representation of a millisecond epoch absolute instant
-                            val instant = Instant.ofEpochMilli(timeLogToSubmit.startTime)
-
-                            // Adding the timezone information to be able to format it (change accordingly)
-                            val date = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
-                            var startedAt: String = formatter.format(date)
-
-                            Timber.i(">>> Trying SubmitTimeLog...")
-                            val response: Response<Unit> = JiraApi.retrofitService.submitTimeLog(
-                                Auth.getAuthHeaders(),
-                                // Jira only accepts a minimum of 60 second logs.
-                                WorkLog(if (timeInSecs > 60) 60 else 60, startedAt),
-                                timeLogToSubmit.issueKey
-                            )
-
-                            when (response.code()) {
-                                204 -> {
-                                    responseMessage = "Request is successful. Issue Updated"
-                                    _status.value = JiraAPIStatus.DONE
-                                }
-                                400 -> {
-                                    responseMessage =
-                                        "Body missing, missing permissions on some fields or invalid transition"
-                                    _status.value = JiraAPIStatus.ERROR
-                                }
-                                401 -> {
-                                    responseMessage =
-                                        "Authentication credentials are incorrect or missing."
-                                    _status.value = JiraAPIStatus.ERROR
-                                }
-                                403 -> {
-                                    responseMessage =
-                                        "No Permission to override security screen or hidden fields"
-                                    _status.value = JiraAPIStatus.ERROR
-                                }
-                                404 -> {
-                                    responseMessage =
-                                        "Issue not found. Has it been deleted on the server?."
-                                    _status.value = JiraAPIStatus.ERROR
-                                }
-                            }
-
-                        }
-                    }
-                }  // coroutineScope block will wait here until all child tasks are completed
-
-            }
-        }
-    }
 
     fun onClearDb() {
         viewModelScope.launch {

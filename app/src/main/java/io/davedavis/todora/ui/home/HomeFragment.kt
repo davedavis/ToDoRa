@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         val binding = FragmentHomeBinding.inflate(inflater)
         setHasOptionsMenu(true)
@@ -70,6 +70,7 @@ class HomeFragment : Fragment() {
         binding.swipeToRefreshContainer.setOnRefreshListener {
             viewModel.filter.value?.let { viewModel.updateFilter(it) }
             Timber.i(">>>>> Update is happening in the recyclerview")
+
 
             binding.issuesGrid.adapter?.notifyDataSetChanged()
             binding.swipeToRefreshContainer.isRefreshing = false

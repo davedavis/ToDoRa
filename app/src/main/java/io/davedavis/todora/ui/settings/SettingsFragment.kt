@@ -8,7 +8,7 @@ import androidx.preference.PreferenceFragmentCompat
 import io.davedavis.todora.R
 
 /**
- * Creates an instance of the PrefrenceFragmentCompat class to auto save settings in shared
+ * Creates an instance of the PreferenceFragmentCompat class to auto save settings in shared
  * preferences. Validates email and provides hints in a listener when editing each item.
  */
 class SettingsFragment : PreferenceFragmentCompat() {

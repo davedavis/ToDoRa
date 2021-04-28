@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.davedavis.todora.model.*
-import io.davedavis.todora.network.*
+import io.davedavis.todora.network.Auth
+import io.davedavis.todora.network.JiraApi
+import io.davedavis.todora.network.JiraApiService
 import io.davedavis.todora.utils.SharedPreferencesManager
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -100,9 +102,7 @@ class CreateViewModel : ViewModel() {
     }
 
     /**
-     * Submits new issue to the [JiraApiService] by calling [newJiraIssue] through a coroutine.
-     * @param filter on the [JiraApiFilter]
-     * @param [newIssue] that goes along with the post request
+     * Submits new issue to the [JiraApiService] by calling [submitNewJiraIssue] through a coroutine.
      * Returns a string response.
      */
     fun submitNewJiraIssue() {

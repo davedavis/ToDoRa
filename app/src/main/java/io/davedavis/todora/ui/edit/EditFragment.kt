@@ -32,7 +32,7 @@ class EditFragment : Fragment() {
      * items. Prevents keyboard from staying on screen.
      * @param view which the system removes input focus from.
      */
-    fun hideKeyboard(view: View) {
+    private fun hideKeyboard(view: View) {
         view.apply {
             val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
@@ -62,7 +62,7 @@ class EditFragment : Fragment() {
         val jiraIssueKey = EditFragmentArgs.fromBundle(requireArguments()).issueKey
 
         /**
-         * Sets up binding and livecycle owner to this fragment.
+         * Sets up binding and lifecycle owner to this fragment.
          */
         val binding = FragmentEditBinding.inflate(inflater)
         binding.lifecycleOwner = this
@@ -75,10 +75,10 @@ class EditFragment : Fragment() {
 
         /**
          * Create the viewModel by using a factory and giving it the
-         * @param dataSource which is an instance of [TimeLogDatabase]
-         * @param application which is an instance of the application[Context]
-         * @param jiraIssueKey which is a string received from the bundle
-         * @param jiraIssueObject which is the actual serialized object Retrofit can send.
+         * dataSource which is an instance of [TimeLogDatabase]
+         * application which is an instance of the application[Context]
+         * jiraIssueKey which is a string received from the bundle
+         * jiraIssueObject which is the actual serialized object Retrofit can send.
          */
         viewModelFactory =
             EditViewModelFactory(dataSource, application, jiraIssueKey, jiraIssueObject)
@@ -102,7 +102,7 @@ class EditFragment : Fragment() {
 
             binding.submitTimelogsButton.isEnabled = !it.isNullOrEmpty()
 
-            var timeLogTextList = StringBuilder()
+            val timeLogTextList = StringBuilder()
 
             if (it.isNullOrEmpty()) {
                 binding.timelogHeaderTextview.text = getString(R.string.no_pending_logs)

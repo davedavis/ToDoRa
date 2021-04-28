@@ -19,6 +19,22 @@ and and image view that shows when there's a network operation.-->
         android:layout_height="match_parent"
         tools:context="io.davedavis.todora.MainActivity">
 
+        <ImageView
+            android:id="@+id/status_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:backgroundTint="@color/primaryColor"
+            android:contentDescription="@string/loading"
+
+            app:jiraApiStatus="@{viewModel.status}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/primaryColor"
+            tools:srcCompat="@drawable/network_loading" />
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_to_refresh_container"
             android:layout_width="wrap_content"
@@ -44,21 +60,6 @@ and and image view that shows when there's a network operation.-->
                 app:spanCount="1"
                 tools:itemCount="16"
                 tools:listitem="@layout/list_item" />
-
-            <ImageView
-                android:id="@+id/status_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:backgroundTint="@color/primaryColor"
-                android:contentDescription="@string/loading"
-                app:jiraApiStatus="@{viewModel.status}"
-                app:layout_constraintBottom_toBottomOf="parent"
-
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/primaryColor" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
