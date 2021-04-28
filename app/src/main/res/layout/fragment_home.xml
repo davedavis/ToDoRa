@@ -19,36 +19,48 @@ and and image view that shows when there's a network operation.-->
         android:layout_height="match_parent"
         tools:context="io.davedavis.todora.MainActivity">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/issues_grid"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:padding="6dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:listData="@{viewModel.issues}"
-            app:spanCount="1"
-            tools:itemCount="16"
-            tools:listitem="@layout/list_item" />
-
-        <ImageView
-            android:id="@+id/status_image"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_to_refresh_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:backgroundTint="@color/primaryColor"
-            android:contentDescription="@string/loading"
-            app:jiraApiStatus="@{viewModel.status}"
             app:layout_constraintBottom_toBottomOf="parent"
-
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/primaryColor" />
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/issues_grid"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:clipToPadding="false"
+                android:padding="6dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:listData="@{viewModel.issues}"
+                app:spanCount="1"
+                tools:itemCount="16"
+                tools:listitem="@layout/list_item" />
+
+            <ImageView
+                android:id="@+id/status_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:backgroundTint="@color/primaryColor"
+                android:contentDescription="@string/loading"
+                app:jiraApiStatus="@{viewModel.status}"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/primaryColor" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -60,7 +72,7 @@ and and image view that shows when there's a network operation.-->
             android:background="@color/primaryColor"
             android:backgroundTint="@color/primaryColor"
             android:contentDescription="@string/create"
-            app:layout_constraintBottom_toBottomOf="@+id/issues_grid"
+            app:layout_constraintBottom_toBottomOf="@+id/swipe_to_refresh_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:rippleColor="@color/primaryLightColor"
             app:srcCompat="@drawable/drawer_create" />

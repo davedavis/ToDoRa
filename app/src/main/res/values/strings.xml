@@ -49,7 +49,7 @@
     <string name="priority">priority</string>
     <string name="description">Description</string>
     <string name="time_tracking_started">Time Tracking Started</string>
-    <string name="timelogs_submitted_message">Timelogs submitted (everything deleted really)</string>
+    <string name="timelogs_submitted_message">Timelogs submitted</string>
     <string name="sample_title">This is the title line. Sometimes it\'s quite large and I</string>
     <string name="sample_description_2_line">This is the second line and I\'m making some long text so I can see some truncation, especially for the super long ones.</string>
     <string name="sample_days_ago">11 Days Ago</string>

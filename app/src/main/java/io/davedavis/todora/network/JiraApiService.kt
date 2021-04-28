@@ -13,6 +13,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.davedavis.todora.model.NewIssue
 import io.davedavis.todora.model.ParcelableIssue
+import io.davedavis.todora.model.WorkLog
 import io.davedavis.todora.utils.SharedPreferencesManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -89,6 +90,8 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface JiraApiService {
+
+    // For listing issues.
     @GET("rest/api/2/search")
     suspend fun getIssues(
         @Header("Authorization") encodedAuth: String?,
@@ -96,6 +99,7 @@ interface JiraApiService {
     ): JiraIssueResponse
 
 
+    // For editing an issue (uses old API)
     @PUT("rest/api/2/issue/{jiraIssueKey}")
     suspend fun updateJiraIssue(
         @Header("Authorization") encodedAuth: String?,
@@ -104,6 +108,7 @@ interface JiraApiService {
     ): retrofit2.Response<Unit>
 
 
+    // For creating a new issue
     @POST("rest/api/3/issue")
     suspend fun newJiraIssue(
         @Header("Authorization") encodedAuth: String?,
@@ -111,27 +116,25 @@ interface JiraApiService {
     ): retrofit2.Response<Unit>
 
 
-    //////////////////////////////////////////////////////////
-    // ToDo: THIS IS THE BEST EXAMPLE OF WHAT I"M TRYING TO DO: https://stackoverflow.com/questions/66221360/android-make-post-request-with-retrofit
-    ////////////////////////////////////////////////////////////
+//    curl --request POST \
+//    --url 'https://davedavis.atlassian.net/rest/api/3/issue/TODORA-44/worklog' \
+//    --user 'dave@davedavis.io:MpkWzHiXp3QdnrtdSZdqF38A' \
+//    --header 'Accept: application/json' \
+//    --header 'Content-Type: application/json' \
+//    --data '{
+//    "timeSpentSeconds": 12000,
+//    "started": "2021-04-27T06:55:51.036+0000"
+//     }'
 
-    // https://johncodeos.com/how-to-make-post-get-put-and-delete-requests-with-retrofit-using-kotlin/
+    // For submitting the Timelogs
+    @POST("rest/api/2/issue/{jiraIssueKey}/worklog")
+    suspend fun submitTimeLog(
+        @Header("Authorization") encodedAuth: String?,
+        @Body workLog: WorkLog?,
+        @Path("jiraIssueKey") jiraIssueKey: String?
+    ): retrofit2.Response<Unit>
 
 }
-
-//interface JiraApiService {
-//    @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
-//    @GET("search")
-//    suspend fun getIssues(@Query("jql") type: String): JiraIssueResponse
-//}
-
-//Passing parameters: https://stackoverflow.com/questions/54338671/send-a-parameter-to-kotlin-retrofit-call
-//
-//interface JiraApiService {
-//    @Headers("Authorization: Basic ZGF2ZUBkYXZlZGF2aXMuaW86TXBrV3pIaVhwM1FkbnJ0ZFNaZHFGMzhB")
-//    @GET()
-//    suspend fun getIssues(@Url url: String?, @Query("jql\"=\"") type: String): JiraIssueResponse
-//}
 
 // Create a singleton API service as it will only be used by a single user in a single app instance.
 object JiraApi {

@@ -13,7 +13,7 @@ data class TimeLog(
     var logId: Long = 0L,
 
     @ColumnInfo(name = "start_time")
-    val startTime: Long = System.currentTimeMillis(),
+    var startTime: Long = System.currentTimeMillis(),
 
     // Set this as start time initially so we know if there's a difference and if time was logged
     @ColumnInfo(name = "end_time")

@@ -48,10 +48,20 @@ class HomeViewModel : ViewModel() {
 
 
     /**
+     * LiveData of the ENUM [JiraApiFilter] so we can keep track of current filter so we can refresh
+     * to the correct view with the swipe gesture.
+     */
+    private val _filter = MutableLiveData<JiraApiFilter>()
+    val filter: LiveData<JiraApiFilter>
+        get() = _filter
+
+
+    /**
      * Call getJiraIssues() on init so we can display issues immediately.
      */
     init {
         getJiraIssues(JiraApiFilter.SHOW_ALL)
+        _filter.postValue(JiraApiFilter.SHOW_ALL)
     }
 
 
@@ -84,6 +94,7 @@ class HomeViewModel : ViewModel() {
      */
     fun updateFilter(filter: JiraApiFilter) {
         Timber.i(">>>>> UpdateFilter Called!")
+        _filter.postValue(filter)
         getJiraIssues(filter)
     }
 

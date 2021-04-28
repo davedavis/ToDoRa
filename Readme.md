@@ -12,3 +12,11 @@ Annex 2 - Supervisor Emails
 
 
 
+# ToDo
+- Complete TimeLog Submissions.
+- Add OAuth
+- Select project dynamically
+- Select Status Dynamically
+
+
+

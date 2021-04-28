@@ -14,22 +14,19 @@ import kotlinx.android.parcel.Parcelize
 data class ParcelableIssue(
         @Json(name = "fields")
         val fields: Fields?
-
 ) : Parcelable
 
 @SuppressLint("ParcelCreator")
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class Fields(
-        @Json(name = "summary")
-        var summary: String?,
-        @Json(name = "description")
-        var description: String?,
-        @Json(name = "priority")
-        val priority: Priority?,
-
-
-        ) : Parcelable
+    @Json(name = "summary")
+    var summary: String?,
+    @Json(name = "description")
+    var description: String?,
+    @Json(name = "priority")
+    val priority: Priority?,
+) : Parcelable
 
 
 @SuppressLint("ParcelCreator")
@@ -38,6 +35,5 @@ data class Fields(
 data class Priority(
         @Json(name = "name")
         var name: String?
-
 ) : Parcelable
 

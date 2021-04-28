@@ -62,6 +62,21 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
 
         /**
+         * Defines an action when the pull to refresh gesture is performed.
+         * We want to call the API again
+         *
+         * */
+
+        binding.swipeToRefreshContainer.setOnRefreshListener {
+            viewModel.filter.value?.let { viewModel.updateFilter(it) }
+            Timber.i(">>>>> Update is happening in the recyclerview")
+
+            binding.issuesGrid.adapter?.notifyDataSetChanged()
+            binding.swipeToRefreshContainer.isRefreshing = false
+
+        }
+
+        /**
          * Giving the binding access to the HomeViewModel
          */
         binding.viewModel = viewModel

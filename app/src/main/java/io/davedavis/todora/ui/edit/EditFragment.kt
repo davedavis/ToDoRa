@@ -102,13 +102,16 @@ class EditFragment : Fragment() {
 
             binding.submitTimelogsButton.isEnabled = !it.isNullOrEmpty()
 
+            var timeLogTextList = StringBuilder()
+
             if (it.isNullOrEmpty()) {
                 binding.timelogHeaderTextview.text = getString(R.string.no_pending_logs)
             } else
-                for (timelogEntry in it)
 
-                // Displaying as seconds here so it can be tested easily without waiting.
-                    binding.pendingTimeLogsTextView.append(
+
+                for (timelogEntry in it) {
+//                timeLogTextList.append(timelogEntry.endTime.toString() + "\n")
+                    timeLogTextList.append(
                         (TimeUnit.MILLISECONDS.toSeconds
                             (timelogEntry.endTime - timelogEntry.startTime)
                                 )
@@ -117,6 +120,20 @@ class EditFragment : Fragment() {
                                 getString(R.string.seconds) +
                                 System.lineSeparator()
                     )
+                }
+            binding.pendingTimeLogsTextView.text = timeLogTextList
+
+
+            // Displaying as seconds here so it can be tested easily without waiting.
+//                    binding.pendingTimeLogsTextView.append(
+//                        (TimeUnit.MILLISECONDS.toSeconds
+//                            (timelogEntry.endTime - timelogEntry.startTime)
+//                                )
+//                            .toString() +
+//                                " - " +
+//                                getString(R.string.seconds) +
+//                                System.lineSeparator()
+//                    )
 
         })
 
@@ -217,7 +234,7 @@ class EditFragment : Fragment() {
         // If the submit Pending Timelogs button is enabled, there's logs to be submitted. So call the update method.
         binding.submitTimelogsButton.setOnClickListener {
 
-            viewModel.onClearDb()
+
             binding.submitTimelogsButton.isEnabled = false
             binding.pendingTimeLogsTextView.isVisible = false
             binding.timelogHeaderTextview.text = getString(R.string.no_pending_logs)
@@ -227,6 +244,7 @@ class EditFragment : Fragment() {
                 getString(R.string.timelogs_submitted_message),
                 Toast.LENGTH_SHORT
             ).show()
+            viewModel.onClearDb()
             this.findNavController().navigate(R.id.nav_home)
         }
         return binding.root
