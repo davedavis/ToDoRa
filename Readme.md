@@ -14,7 +14,7 @@ production or as part of any production code in any way.
 - Select Status Dynamically
 
 
-# API keys
-All API keys are revoked
+# API keys & Status
+All API keys are revoked as this project is no longer active.
 
 
