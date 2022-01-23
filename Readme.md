@@ -1,16 +1,11 @@
 # ToDoRa
 An android app that lets you use Jira like a basic to-do app, keeping
-all your personal and work tasks in one interface.
+all your personal and work tasks in one interface. ToDoRa is a to-do
+app that let's you enter your to-dos quickly as issues into Jira Cloud.
 
-# Sample Data to test app
-Name: Any
-Email: dave@davedavis.io
-Jira subdomain: davedavis
-Jira project ID: TODORA
-Jira API key: MpkWzHiXp3QdnrtdSZdqF38A
-Annex 2 - Supervisor Emails
-
-
+## About
+This project was part of my postgrad studies and should not be used in
+production or as part of any production code in any way. 
 
 # ToDo
 - Complete TimeLog Submissions.
@@ -18,5 +13,8 @@ Annex 2 - Supervisor Emails
 - Select project dynamically
 - Select Status Dynamically
 
+
+# API keys
+All API keys are revoked
 
 
